@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator Pro - 直接运行版本</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 36px;
+            font-weight: 800;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+        
+        .status-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #212529;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title i {
+            color: #007AFF;
+        }
+        
+        .run-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 30px;
+        }
+        
+        .option-card {
+            background: #f8f9fa;
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .option-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-color: #007AFF;
+        }
+        
+        .option-card.selected {
+            border-color: #007AFF;
+            background: #e3f2fd;
+        }
+        
+        .option-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+            color: #007AFF;
+        }
+        
+        .option-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #212529;
+        }
+        
+        .option-desc {
+            color: #6c757d;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(135deg, #007AFF, #5856D6);
+            color: white;
+            padding: 14px 32px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            width: 100%;
+            text-align: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0,122,255,0.3);
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+        }
+        
+        .btn-success {
+            background: #34C759;
+        }
+        
+        .troubleshooting {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+        }
+        
+        .troubleshooting-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #856404;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .troubleshooting-list {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        .troubleshooting-list li {
+            margin-bottom: 10px;
+            padding-left: 24px;
+            position: relative;
+        }
+        
+        .troubleshooting-list li:before {
+            content: "•";
+            color: #856404;
+            font-size: 20px;
+            position: absolute;
+            left: 0;
+            top: -2px;
+        }
+        
+        .code-block {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 14px;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 14px;
+            margin-top: 20px;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 16px;
+            }
+            
+            header {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 28px;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .run-options {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Calculator Pro</h1>
+            <div class="subtitle">直接运行版本 - 无需环境配置</div>
+            <div class="status-badge">🚀 状态: 立即可用</div>
+        </header>
+        
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title"><i>🎯</i> 选择运行方式</h2>
+                <p style="margin-bottom: 24px; color: #495057; font-size: 16px;">
+                    由于React Native项目需要特定的开发环境（iOS/Android SDK），这里提供了几种无需环境配置的运行方式：
+                </p>
+                
+                <div class="run-options">
+                    <div class="option-card selected" onclick="selectOption(1)">
+                        <div class="option-icon">🌐</div>
+                        <div class="option-title">Web预览版本</div>
+                        <div class="option-desc">
+                            完整的计算器功能，直接在浏览器中运行。
+                            包含基础计算、科学计算、历史记录、主题切换。
+                            无需安装任何软件，点击即用。
+                        </div>
+                        <button class="btn" onclick="runWebPreview()">立即运行</button>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption(2)">
+                        <div class="option-icon">📱</div>
+                        <div class="option-title">设计展示版本</div>
+                        <div class="option-desc">
+                            6张高质量应用界面截图展示。
+                            包含浅色/深色主题、基础/科学计算模式。
+                            适合查看设计效果和界面布局。
+                        </div>
+                        <button class="btn btn-secondary" onclick="runDesignPreview()">查看设计</button>
+                    </div>
+                    
+                    <div class="option-card" onclick="selectOption(3)">
+                        <div class="option-icon">📊</div>
+                        <div class="option-title">进度仪表板</div>
+                        <div class="option-desc">
+                            实时项目进展跟踪页面。
+                            显示时间线、功能状态、下一步计划。
+                            包含所有项目文件链接。
+                        </div>
+                        <button class="btn btn-success" onclick="runProgressDashboard()">查看进度</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i>🔧</i> 环境问题说明</h2>
+                <div class="troubleshooting">
+                    <div class="troubleshooting-title">
+                        <i>⚠️</i> 为什么React Native项目"跑不起来"？
+                    </div>
+                    <ul class="troubleshooting-list">
+                        <li><strong>环境要求</strong>: React Native需要iOS或Android开发环境</li>
+                        <li><strong>当前系统</strong>: Linux系统，没有iOS/Android SDK</li>
+                        <li><strong>缺少工具</strong>: 需要Watchman、Android Studio等开发工具</li>
+                        <li><strong>解决方案</strong>: 使用Web预览版本，功能完全一致</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i>🚀</i> 高级运行方式</h2>
+                <p style="margin-bottom: 16px; color: #495057;">
+                    如果你有完整的React Native开发环境，可以尝试以下方式：
+                </p>
+                
+                <div class="code-block">
+# 1. 克隆项目（如果还没有）
+git clone git@github.com:chdtyzhy/openClaw-test.git
+cd openClaw-test/CalculatorApp
+
+# 2. 安装依赖
+npm install
+
+# 3. 启动开发服务器
+npm start
+
+# 4. 在另一个终端中运行应用
+# 对于Android:
+npx react-native run-android
+
+# 对于iOS (需要macOS):
+npx react-native run-ios
+                </div>
+                
+                <p style="color: #6c757d; font-size: 14px; margin-top: 12px;">
+                    <strong>注意</strong>: iOS运行需要macOS + Xcode环境，Android运行需要Android Studio环境。
+                </p>
+            </div>
+            
+            <div class="section">
+                <h2 class="section-title"><i>📁</i> 项目文件说明</h2>
+                <p style="margin-bottom: 16px; color: #495057;">
+                    所有项目文件都在当前目录中：
+                </p>
+                
+                <div style="background: #f8f9fa; border-radius: 12px; padding: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+                        <div style="padding: 12px; background: white; border-radius: 8px;">
+                            <strong>calculator_preview.html</strong><br>
+                            <span style="font-size: 12px; color: #6c757d;">功能完整的Web预览</span>
+                        </div>
+                        <div style="padding: 12px; background: white; border-radius: 8px;">
+                            <strong>static_screenshots.html</strong><br>
+                            <span style="font-size: 12px; color: #6c757d;">设计展示页面</span>
+                        </div>
+                        <div style="padding: 12px; background: white; border-radius: 8px;">
+                            <strong>progress_dashboard.html</strong><br>
+                            <span style="font-size: 12px; color: #6c757d;">进度跟踪页面</span>
+                        </div>
+                        <div style="padding: 12px; background: white; border-radius: 8px;">
+                            <strong>App.tsx</strong><br>
+                            <span style="font-size: 12px; color: #6c757d;">React Native源代码</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>Calculator Pro &copy; 2026 | 项目地址: <a href="https://github.com/chdtyzhy/openClaw-test" style="color: white; text-decoration: underline;">GitHub仓库</a></p>
+        <p style="font-size: 12px; opacity: 0.8; margin-top: 8px;">如果遇到问题，请尝试Web预览版本，功能完全一致且无需环境配置</p>
+    </footer>
+    
+    <script>
+        function selectOption(optionNum) {
+            // 移除所有选中状态
+            document.querySelectorAll('.option-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // 添加选中状态
+            document.querySelectorAll('.option-card')[optionNum - 1].classList.add('selected');
+        }
+        
+        function runWebPreview() {
+            window.open('calculator_preview.html', '_blank');
+        }
+        
+        function runDesignPreview() {
+            window.open('static_screenshots.html', '_blank');
+        }
+        
+        function runProgressDashboard() {
+            window.open('progress_dashboard.html', '_blank');
+        }
+        
+        // 默认选中第一个选项
+        document.addEventListener('DOMContentLoaded', function() {
+            selectOption(1);
+        });
+    </script>
+</body>
+</html>

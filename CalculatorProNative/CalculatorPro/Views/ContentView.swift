@@ -18,6 +18,9 @@ struct ContentView: View {
     @State private var currentOperator: String? = nil
     @State private var isShowingSettings = false
     
+    // 屏幕适配器
+    private let screenAdapter = ScreenAdapter.shared
+    
     var body: some View {
         TabView(selection: $selectedTab) {
             // 计算器标签
@@ -46,6 +49,7 @@ struct ContentView: View {
                 .tag(2)
         }
         .accentColor(.blue)
+        .adaptiveFont(size: 16)  // 自适应字体
         .onChange(of: selectedTab) { oldValue, newValue in
             // 标签切换时的处理
             handleTabChange(from: oldValue, to: newValue)

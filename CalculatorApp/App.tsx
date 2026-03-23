@@ -17,6 +17,7 @@ import {
   Easing,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import screenAdapter, { responsiveWidth, responsiveHeight, scaleFont } from './screenAdapter';
 
 // iOS语义颜色定义 - 增强版
 const Colors = {

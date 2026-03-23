@@ -106,10 +106,25 @@ skill_installation_log.md
 stock_*.py
 stock_*.txt
 stock_*.md
+README_stock_toolkit.md
+stock_analysis_toolkit.py.bak
+test_stock_toolkit.py
 
 # 微信相关
 wechat_*.py
 
+# 钉钉相关
+*钉钉*.md
+*PDF转JPG*.md
+
+# 公司相关
+*公司信息*.md
+*公众号内容检查方案.md
+
 # 其他临时文件
 local_preview.html
 ios_app_market_research.md
+DELETE_MAIN_GUIDE.md
+
+# 设计文件 (太大，不上传)
+CalculatorPro/design/
