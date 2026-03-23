@@ -1,0 +1,273 @@
+# 自定义 Fastfile
+# 更多文档: https://docs.fastlane.tools
+default_platform(:ios)
+
+# iOS平台配置
+platform :ios do
+  # 应用配置
+  APP_NAME = "Tip Calculator Pro"
+  SCHEME_NAME = "TipCalculatorPro"
+  BUNDLE_ID = "com.yourname.tipcalculatorpro"  # 需要修改为你的 Bundle ID
+  
+  # 在运行前检查环境
+  before_all do
+    ensure_git_status_clean
+    git_pull
+  end
+
+  # ------------------------------------------------------------
+  # 开发流程
+  # ------------------------------------------------------------
+  
+  desc "运行完整的开发流程"
+  lane :dev do
+    # 1. 更新依赖
+    sh "cd .. && npm install"
+    
+    # 2. 代码检查
+    lint
+    
+    # 3. 运行测试
+    tests
+    
+    # 4. 启动开发服务器
+    sh "cd .. && npx react-native start &"
+    
+    # 5. 启动iOS模拟器
+    sh "cd .. && npx react-native run-ios"
+  end
+
+  desc "代码检查和格式化"
+  lane :lint do
+    # TypeScript 检查
+    sh "cd .. && npx tsc --noEmit"
+    
+    # ESLint 检查
+    sh "cd .. && npx eslint src/ --ext .js,.jsx,.ts,.tsx --fix"
+    
+    # 打印完成信息
+    UI.success("✅ 代码检查完成")
+  end
+
+  desc "运行测试"
+  lane :tests do
+    # 运行 Jest 测试
+    sh "cd .. && npm test -- --watchAll=false --passWithNoTests"
+    
+    UI.success("✅ 测试完成")
+  end
+
+  # ------------------------------------------------------------
+  # 构建和打包
+  # ------------------------------------------------------------
+  
+  desc "构建开发版本"
+  lane :build_development do
+    # 更新版本号（如果需要）
+    # increment_build_number
+    
+    # 构建应用
+    build_app(
+      workspace: "../ios/TipCalculatorPro.xcworkspace",
+      scheme: SCHEME_NAME,
+      configuration: "Debug",
+      export_method: "development",
+      silent: true,
+      clean: true
+    )
+    
+    UI.success("✅ 开发版本构建完成")
+  end
+
+  desc "构建发布版本"
+  lane :build_release do
+    # 更新版本号
+    # increment_version_number(bump_type: "patch")  # patch, minor, major
+    
+    # 构建应用
+    build_app(
+      workspace: "../ios/TipCalculatorPro.xcworkspace",
+      scheme: SCHEME_NAME,
+      configuration: "Release",
+      export_method: "app-store",
+      silent: true,
+      clean: true
+    )
+    
+    UI.success("✅ 发布版本构建完成")
+  end
+
+  # ------------------------------------------------------------
+  # 截图和元数据
+  # ------------------------------------------------------------
+  
+  desc "生成应用截图"
+  lane :screenshots do
+    # 注意：需要先配置 snapshot
+    capture_screenshots(
+      workspace: "../ios/TipCalculatorPro.xcworkspace",
+      scheme: SCHEME_NAME,
+      output_directory: "./fastlane/screenshots",
+      languages: ["en-US", "zh-Hans"],
+      devices: [
+        "iPhone 15 Pro Max",
+        "iPhone 15 Pro",
+        "iPhone 15"
+      ],
+      clean: true
+    )
+    
+    UI.success("✅ 截图生成完成")
+  end
+
+  desc "上传元数据到 App Store Connect"
+  lane :upload_metadata do
+    # 上传元数据（描述、关键词等）
+    deliver(
+      username: ENV["APPLE_ID"],
+      app_identifier: BUNDLE_ID,
+      metadata_path: "./fastlane/metadata",
+      screenshots_path: "./fastlane/screenshots",
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      force: true
+    )
+    
+    UI.success("✅ 元数据上传完成")
+  end
+
+  # ------------------------------------------------------------
+  # 测试和发布
+  # ------------------------------------------------------------
+  
+  desc "提交到 TestFlight (Beta测试)"
+  lane :beta do
+    # 1. 运行测试
+    tests
+    
+    # 2. 构建发布版本
+    build_release
+    
+    # 3. 上传到 TestFlight
+    pilot(
+      username: ENV["APPLE_ID"],
+      app_identifier: BUNDLE_ID,
+      ipa: "../TipCalculatorPro.ipa",
+      skip_waiting_for_build_processing: false,
+      distribute_external: false,
+      groups: ["Internal Testers"],
+      changelog: "新版本发布，包含bug修复和性能改进"
+    )
+    
+    UI.success("✅ 已提交到 TestFlight")
+  end
+
+  desc "发布到 App Store"
+  lane :release do
+    # 1. 运行测试
+    tests
+    
+    # 2. 构建发布版本
+    build_release
+    
+    # 3. 上传到 App Store
+    upload_to_app_store(
+      username: ENV["APPLE_ID"],
+      app_identifier: BUNDLE_ID,
+      ipa: "../TipCalculatorPro.ipa",
+      force: true,
+      skip_metadata: false,
+      skip_screenshots: false,
+      submit_for_review: false,  # 设置为 true 会自动提交审核
+      automatic_release: false   # 设置为 true 会自动发布
+    )
+    
+    UI.success("✅ 已提交到 App Store Connect")
+    UI.important("请登录 App Store Connect 完成最终提交")
+  end
+
+  desc "完整发布流程"
+  lane :full_release do
+    # 更新版本号
+    increment_version_number(bump_type: "patch")
+    
+    # 生成截图
+    screenshots
+    
+    # 上传元数据
+    upload_metadata
+    
+    # 提交审核
+    release
+    
+    # 发送通知
+    slack(
+      message: "🎉 #{APP_NAME} 新版本已提交审核！",
+      success: true
+    )
+  end
+
+  # ------------------------------------------------------------
+  # 工具函数
+  # ------------------------------------------------------------
+  
+  desc "清理构建缓存"
+  lane :clean do
+    # 清理 iOS 构建缓存
+    sh "cd ../ios && xcodebuild clean -workspace TipCalculatorPro.xcworkspace -scheme #{SCHEME_NAME}"
+    
+    # 清理 node_modules
+    sh "cd .. && rm -rf node_modules"
+    
+    # 清理 iOS 派生数据
+    sh "rm -rf ~/Library/Developer/Xcode/DerivedData/*"
+    
+    UI.success("✅ 清理完成")
+  end
+
+  desc "显示当前版本信息"
+  lane :version_info do
+    # 获取当前版本号
+    version = get_version_number(
+      xcodeproj: "../ios/TipCalculatorPro.xcodeproj"
+    )
+    
+    # 获取当前构建号
+    build = get_build_number(
+      xcodeproj: "../ios/TipCalculatorPro.xcodeproj"
+    )
+    
+    UI.message("📱 应用: #{APP_NAME}")
+    UI.message("📦 版本: #{version}")
+    UI.message("🔢 构建: #{build}")
+    UI.message("🆔 Bundle ID: #{BUNDLE_ID}")
+  end
+
+  # ------------------------------------------------------------
+  # 错误处理
+  # ------------------------------------------------------------
+  
+  # 错误回调
+  error do |lane, exception|
+    # 发送错误通知
+    slack(
+      message: "❌ #{APP_NAME} 构建失败: #{exception.message}",
+      success: false
+    )
+    
+    # 打印错误信息
+    UI.error("构建失败: #{exception.message}")
+  end
+
+  # 完成后回调
+  after_all do |lane|
+    # 发送成功通知
+    time = lane.duration.round(2)
+    slack(
+      message: "✅ #{APP_NAME} #{lane} 任务完成，耗时 #{time} 秒",
+      success: true
+    ) if lane != :dev  # 开发任务不发送通知
+    
+    UI.success("🎉 任务完成，耗时 #{time} 秒")
+  end
+end

@@ -1,0 +1,113 @@
+# Dependencies
+node_modules/
+.expo/
+.expo-shared/
+
+# Production
+build/
+dist/
+*.ipa
+*.apk
+
+# Development
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+metro.config.local.js
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# iOS
+ios/build/
+ios/Pods/
+ios/*.xcworkspace
+ios/*.xcodeproj/xcuserdata
+ios/*.xcodeproj/project.xcworkspace/xcuserdata
+ios/DerivedData/
+
+# Android
+android/.gradle
+android/local.properties
+android/*.keystore
+android/*.jks
+android/.idea/
+android/app/build/
+android/build/
+android/captures/
+
+# Fastlane
+fastlane/report.xml
+fastlane/Preview.html
+fastlane/screenshots
+fastlane/test_output
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+[Tt]humbs.db
+
+# Logs and reports
+logs/
+reports/
+
+# App Factory output
+output/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+pycache/
+.pytest_cache/
+.coverage
+.coverage.*
+.tox/
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# Node
+.npm
+.eslintcache
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+
+# TypeScript
+*.tsbuildinfo
