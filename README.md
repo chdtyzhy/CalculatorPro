@@ -49,33 +49,50 @@ CalculatorApp/
 
 ## 🚀 快速开始
 
+### 分支策略
+```
+🎯 开发分支: dev (所有开发工作在此分支)
+🎯 主分支: main (仅用于发布版本)
+🎯 工作流: 功能开发 → dev分支 → 测试 → 合并到main
+```
+
+### 克隆和设置
+```bash
+# 1. 克隆项目并切换到dev分支
+git clone git@github.com:chdtyzhy/openClaw-test.git
+cd openClaw-test
+git checkout dev
+
+# 2. 确保在dev分支进行所有开发工作
+git branch  # 应该显示 * dev
+```
+
 ### 纯原生项目 (需要 macOS + Xcode)
 ```bash
-# 1. 克隆项目
-git clone git@github.com:chdtyzhy/openClaw-test.git
-cd openClaw-test/CalculatorProNative
+# 进入纯原生项目目录
+cd CalculatorProNative
 
-# 2. 打开 Xcode 项目
+# 打开 Xcode 项目
 open CalculatorPro/CalculatorPro.xcodeproj
 
-# 3. 选择目标设备并运行
-# 4. 或者使用命令行构建
+# 选择目标设备并运行
+# 或者使用命令行构建
 swift build
 swift test
 ```
 
 ### React Native 项目
 ```bash
-# 1. 进入项目目录
+# 进入React Native项目目录
 cd CalculatorApp
 
-# 2. 安装依赖
+# 安装依赖
 npm install
 
-# 3. 启动开发服务器
+# 启动开发服务器
 npm start
 
-# 4. 在浏览器中预览
+# 在浏览器中预览
 # 打开 http://localhost:8080/calculator_preview.html
 ```
 
