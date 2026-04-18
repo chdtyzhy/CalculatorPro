@@ -5,25 +5,60 @@
 
 import SwiftUI
 
+/// 系统计算器布局：键盘按宽度铺满，显示区占剩余高度，底部适配安全区。
+private enum CalculatorPadMetrics {
+    static func compute(contentHeight: CGFloat, screenWidth: CGFloat) -> (display: CGFloat, button: CGFloat, rowSpacing: CGFloat, bottomPad: CGFloat) {
+        let hPad: CGFloat = 16
+        // 底部留白：适配 home indicator 区域（约 34pt）+ 额外间距
+        let bottomPad: CGFloat = 20
+        
+        let innerW = max(0, screenWidth - 2 * hPad)
+        
+        // 按键边长：优先按宽度四列等分
+        let spacing: CGFloat = 12
+        let buttonSize = max(1, floor((innerW - 3 * spacing) / 4))
+        
+        // 键盘总高 = 5行按键 + 4行间距
+        let kbdH = 5 * buttonSize + 4 * spacing
+        
+        // 显示区 = 剩余高度（不少于 80，不超过 120）
+        let displayH = min(120, max(80, contentHeight - bottomPad - kbdH))
+        
+        return (displayH, buttonSize, spacing, bottomPad)
+    }
+}
+
 struct CalculatorView: View {
     @StateObject private var calculator = CalculatorModel()
     
     var body: some View {
         GeometryReader { geometry in
+            let safeTop = geometry.safeAreaInsets.top
+            let safeBottom = geometry.safeAreaInsets.bottom
+            /// 使用 GeometryReader 的全高，内容通过 ignoresSafeArea + 手动 padding 控制
+            let hPad: CGFloat = 16
+            
+            let layout = CalculatorPadMetrics.compute(
+                contentHeight: geometry.size.height - safeTop - safeBottom,
+                screenWidth: geometry.size.width
+            )
+            
             ZStack {
                 Color.black.ignoresSafeArea()
                 
                 VStack(spacing: 0) {
-                    // 显示区域
-                    DisplayView(calculator: calculator)
-                        .frame(height: geometry.size.height * 0.28)
-                        .padding(.horizontal, 20)
+                    // 显示区：占剩余空间，数字贴底
+                    DisplayView(calculator: calculator, layoutHeight: layout.display)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .padding(.horizontal, hPad)
                     
-                    // 按钮区域
-                    ButtonPadView(calculator: calculator, size: geometry.size)
-                        .padding(.horizontal, 16)
-                        .padding(.bottom, geometry.safeAreaInsets.bottom + 10)
+                    // 键盘区：明确高度避免裁切，贴底
+                    ButtonPadView(calculator: calculator, buttonSize: layout.button, rowSpacing: layout.rowSpacing)
+                        .frame(height: 5 * layout.button + 4 * layout.rowSpacing)
+                        .padding(.horizontal, hPad)
+                        .padding(.bottom, max(safeBottom, 20))
                 }
+                .padding(.top, safeTop)
             }
         }
         .sheet(isPresented: $calculator.showHistory) {
@@ -32,125 +67,136 @@ struct CalculatorView: View {
     }
 }
 
+private enum CalcColors {
+    /// 顶栏与首行功能键：浅灰
+    static let lightGrayFill = Color(white: 0.52)
+    /// 数字区：深灰
+    static let darkNumericFill = Color(white: 0.22)
+    /// 系统计算器风格橙
+    static let operatorOrange = Color(red: 1, green: 0.58, blue: 0.12)
+}
+
 // MARK: - 显示区域
 struct DisplayView: View {
     @ObservedObject var calculator: CalculatorModel
+    /// 分配到的显示区高度，用于主数字字号与竖直留白
+    var layoutHeight: CGFloat = 100
+    
+    /// 根据显示内容长度动态调整字号：长数字用小字号
+    private var mainDigitSize: CGFloat {
+        let baseSize = min(70, max(44, layoutHeight * 0.45))
+        let count = calculator.display.count
+        if count > 12 {
+            return baseSize * 0.72
+        } else if count > 9 {
+            return baseSize * 0.82
+        }
+        return baseSize
+    }
     
     var body: some View {
-        VStack(alignment: .trailing, spacing: 8) {
-            // 历史记录预览（可选）
-            if !calculator.previousDisplay.isEmpty {
-                Text(calculator.previousDisplay)
-                    .font(.system(size: 24))
-                    .foregroundColor(.gray)
+        Group {
+            if calculator.previousDisplay.isEmpty {
+                Text(calculator.display)
+                    .font(.system(size: mainDigitSize, weight: .light))
+                    .foregroundColor(.white)
                     .lineLimit(1)
                     .minimumScaleFactor(0.5)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
+            } else {
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text(calculator.previousDisplay)
+                        .font(.system(size: min(20, layoutHeight * 0.22)))
+                        .foregroundColor(.gray)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.6)
+                    Spacer(minLength: 0)
+                    Text(calculator.display)
+                        .font(.system(size: mainDigitSize, weight: .light))
+                        .foregroundColor(.white)
+                        .lineLimit(1)
+                        .minimumScaleFactor(0.5)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            
-            Spacer()
-            
-            // 主显示
-            Text(calculator.display)
-                .font(.system(size: 64, weight: .light))
-                .foregroundColor(.white)
-                .lineLimit(1)
-                .minimumScaleFactor(0.2)
         }
-        .frame(maxWidth: .infinity, alignment: .trailing)
-        .padding(.vertical, 20)
+        .padding(.vertical, 8)
+        .contextMenu {
+            Button("历史记录") { calculator.showHistory = true }
+        }
     }
 }
 
 // MARK: - 按钮区域
 struct ButtonPadView: View {
     @ObservedObject var calculator: CalculatorModel
-    let size: CGSize
+    /// 优先按屏幕宽度铺满四列；与 `rowSpacing` 一起由外层算出
+    let buttonSize: CGFloat
+    var rowSpacing: CGFloat = 10
     
     var body: some View {
-        let spacing: CGFloat = 12
-        let columns: CGFloat = 4
-        let padding: CGFloat = 16
-        let availableWidth = size.width - padding * 2 - spacing * (columns - 1)
-        let buttonSize = floor(availableWidth / columns)
-        
-        VStack(spacing: spacing) {
-            // 第1行: C +/- % ÷
-            HStack(spacing: spacing) {
-                DarkFuncButton("C", buttonSize) { calculator.clear() }
-                DarkFuncButton("+/-", buttonSize) { calculator.toggleSign() }
-                DarkFuncButton("%", buttonSize) { calculator.percentage() }
+        let gap = rowSpacing
+        VStack(spacing: gap) {
+            // 第1行: C / +/- / % / ÷（与系统计算器一致）
+            HStack(spacing: gap) {
+                LightGrayTextButton("C", buttonSize) { calculator.clear() }
+                LightGrayTextButton("+/-", buttonSize) { calculator.toggleSign() }
+                LightGrayTextButton("%", buttonSize) { calculator.percentage() }
                 OperatorButton("÷", buttonSize) { calculator.setOperation(.divide) }
             }
             
-            // 第2行: 7 8 9 ×
-            HStack(spacing: spacing) {
-                NumberButton("7", buttonSize) { calculator.inputDigit("7") }
-                NumberButton("8", buttonSize) { calculator.inputDigit("8") }
-                NumberButton("9", buttonSize) { calculator.inputDigit("9") }
+            HStack(spacing: gap) {
+                NumericButton("7", buttonSize) { calculator.inputDigit("7") }
+                NumericButton("8", buttonSize) { calculator.inputDigit("8") }
+                NumericButton("9", buttonSize) { calculator.inputDigit("9") }
                 OperatorButton("×", buttonSize) { calculator.setOperation(.multiply) }
             }
             
-            // 第3行: 4 5 6 −
-            HStack(spacing: spacing) {
-                NumberButton("4", buttonSize) { calculator.inputDigit("4") }
-                NumberButton("5", buttonSize) { calculator.inputDigit("5") }
-                NumberButton("6", buttonSize) { calculator.inputDigit("6") }
+            HStack(spacing: gap) {
+                NumericButton("4", buttonSize) { calculator.inputDigit("4") }
+                NumericButton("5", buttonSize) { calculator.inputDigit("5") }
+                NumericButton("6", buttonSize) { calculator.inputDigit("6") }
                 OperatorButton("−", buttonSize) { calculator.setOperation(.subtract) }
             }
             
-            // 第4行: 1 2 3 +
-            HStack(spacing: spacing) {
-                NumberButton("1", buttonSize) { calculator.inputDigit("1") }
-                NumberButton("2", buttonSize) { calculator.inputDigit("2") }
-                NumberButton("3", buttonSize) { calculator.inputDigit("3") }
+            HStack(spacing: gap) {
+                NumericButton("1", buttonSize) { calculator.inputDigit("1") }
+                NumericButton("2", buttonSize) { calculator.inputDigit("2") }
+                NumericButton("3", buttonSize) { calculator.inputDigit("3") }
                 OperatorButton("+", buttonSize) { calculator.setOperation(.add) }
             }
             
-            // 第5行: 0 . = (等号双倍高度)
-            HStack(spacing: spacing) {
-                NumberButton("0", buttonSize * 2 + spacing, buttonSize) { calculator.inputDigit("0") }
-                NumberButton(".", buttonSize) { calculator.inputDecimal() }
-                EqualsButton(buttonSize, buttonSize * 2 + spacing) { calculator.calculate() }
+            // 第5行: 0 占两格（胶囊）/ . / =（与系统计算器一致）
+            HStack(spacing: gap) {
+                WideZeroButton(width: buttonSize * 2 + gap, height: buttonSize) { calculator.inputDigit("0") }
+                NumericButton(".", buttonSize) { calculator.inputDecimal() }
+                OperatorButton("=", buttonSize) { calculator.calculate() }
             }
         }
     }
 }
 
-// MARK: - 数字按钮 (白色背景)
-struct NumberButton: View {
-    let title: String
+// MARK: - 宽「0」键（占两列，胶囊形）
+private struct WideZeroButton: View {
     let width: CGFloat
     let height: CGFloat
     let action: () -> Void
     
-    init(_ title: String, _ size: CGFloat, _ action: @escaping () -> Void) {
-        self.title = title
-        self.width = size
-        self.height = size
-        self.action = action
-    }
-    
-    init(_ title: String, _ width: CGFloat, _ height: CGFloat, _ action: @escaping () -> Void) {
-        self.title = title
-        self.width = width
-        self.height = height
-        self.action = action
-    }
-    
     var body: some View {
         Button(action: action) {
-            Text(title)
-                .font(.system(size: min(width, height) * 0.4, weight: .medium))
+            Text("0")
+                .font(.system(size: height * 0.42, weight: .medium))
+                .foregroundColor(.white)
                 .frame(width: width, height: height)
-                .background(Color.white)
-                .foregroundColor(.black)
+                .background(CalcColors.darkNumericFill)
                 .clipShape(Capsule())
         }
+        .buttonStyle(.plain)
     }
 }
 
-// MARK: - 深色功能按钮 (C, +/-, %)
-struct DarkFuncButton: View {
+// MARK: - 浅灰文字键（C、+/-、%）
+private struct LightGrayTextButton: View {
     let title: String
     let size: CGFloat
     let action: () -> Void
@@ -164,16 +210,44 @@ struct DarkFuncButton: View {
     var body: some View {
         Button(action: action) {
             Text(title)
-                .font(.system(size: size * 0.35, weight: .medium))
+                .font(.system(size: size * (title.count >= 2 ? 0.3 : 0.36), weight: .semibold))
+                .foregroundColor(Color(white: 0.06))
                 .frame(width: size, height: size)
-                .background(Color(white: 0.25))
-                .foregroundColor(.white)
+                .background(CalcColors.lightGrayFill)
                 .clipShape(Circle())
         }
+        .buttonStyle(.plain)
     }
 }
 
-// MARK: - 运算符按钮
+// MARK: - 深灰数字键（含 +/-、0、小数点）
+private struct NumericButton: View {
+    let title: String
+    let size: CGFloat
+    let action: () -> Void
+    
+    init(_ title: String, _ size: CGFloat, _ action: @escaping () -> Void) {
+        self.title = title
+        self.size = size
+        self.action = action
+    }
+    
+    var body: some View {
+        Button(action: action) {
+            Text(title)
+                .font(.system(size: title == "+/-" ? size * 0.28 : size * 0.4, weight: .medium))
+                .foregroundColor(.white)
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .frame(width: size, height: size)
+                .background(CalcColors.darkNumericFill)
+                .clipShape(Circle())
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - 运算符按钮（橙）
 struct OperatorButton: View {
     let title: String
     let size: CGFloat
@@ -189,41 +263,12 @@ struct OperatorButton: View {
         Button(action: action) {
             Text(title)
                 .font(.system(size: size * 0.45, weight: .medium))
-                .frame(width: size, height: size)
-                .background(Color.orange)
                 .foregroundColor(.white)
+                .frame(width: size, height: size)
+                .background(CalcColors.operatorOrange)
                 .clipShape(Circle())
         }
-    }
-}
-
-// MARK: - 等号按钮 (双倍高度)
-struct EqualsButton: View {
-    let height: CGFloat
-    let action: () -> Void
-    let width: CGFloat
-    
-    init(_ height: CGFloat, _ action: @escaping () -> Void) {
-        self.height = height
-        self.width = height
-        self.action = action
-    }
-    
-    init(_ width: CGFloat, _ height: CGFloat, _ action: @escaping () -> Void) {
-        self.width = width
-        self.height = height
-        self.action = action
-    }
-    
-    var body: some View {
-        Button(action: action) {
-            Text("=")
-                .font(.system(size: height * 0.4, weight: .medium))
-                .frame(width: width, height: height)
-                .background(Color.orange)
-                .foregroundColor(.white)
-                .clipShape(Capsule())
-        }
+        .buttonStyle(.plain)
     }
 }
 
