@@ -41,12 +41,30 @@ struct CalculatorPad: View {
         }
     }
     
+    // 按钮显示的文字（使用细线符号）
+    private var displayText: String {
+        switch dialPad {
+        case .multiply:
+            return "×"  // 细线乘号
+        case .divide:
+            return "÷"  // 除号
+        case .substract:
+            return "−"  // 细线减号
+        case .plus:
+            return "+"  // 加号
+        case .equal:
+            return "="  // 等号
+        default:
+            return dialPad.rawValue
+        }
+    }
+    
     var body: some View {
         Circle()
             .foregroundColor(buttonBackgroundColor)
             .overlay(
-                Text(dialPad.rawValue)
-                    .font(.system(size: 32, weight: .medium))
+                Text(displayText)
+                    .font(.system(size: 34, weight: .regular, design: .default))
                     .foregroundColor(buttonForegroundColor)
             )
             .aspectRatio(1, contentMode: .fit)

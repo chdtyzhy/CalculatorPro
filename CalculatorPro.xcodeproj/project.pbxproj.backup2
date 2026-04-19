@@ -246,7 +246,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA00010E0000000000000001 /* EurostileExtendedBlack.ttf in Resources */,
-				AA00010F0000000000000001 /* BungeeLayers-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
