@@ -36,8 +36,7 @@
     
     <key>UIAppFonts</key>
     <array>
-        <string>EurostileExtendedBlack.ttf</string>
-        <string>BungeeLayers-Regular.otf</string>
+        <string>Fonts/EurostileExtendedBlack.ttf</string>
     </array>
     
 	<key>UISupportedInterfaceOrientations</key>

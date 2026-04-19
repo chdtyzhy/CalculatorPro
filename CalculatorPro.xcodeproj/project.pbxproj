@@ -20,7 +20,6 @@
 		AA00010B0000000000000001 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020B0000000000000001 /* FontManager.swift */; };
 		AA00010C0000000000000001 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020C0000000000000001 /* FoundationExtensions.swift */; };
 		AA00010E0000000000000001 /* EurostileExtendedBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020E0000000000000001 /* EurostileExtendedBlack.ttf */; };
-		AA00010F0000000000000001 /* BungeeLayers-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020F0000000000000001 /* BungeeLayers-Regular.otf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,7 +37,6 @@
 		AA00020B0000000000000001 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
 		AA00020C0000000000000001 /* FoundationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
 		AA00020E0000000000000001 /* EurostileExtendedBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/EurostileExtendedBlack.ttf"; sourceTree = "<group>"; };
-		AA00020F0000000000000001 /* BungeeLayers-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/Bungee/BungeeLayers-Regular.otf"; sourceTree = "<group>"; };
 		AA0003010000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -102,7 +100,6 @@
 			isa = PBXGroup;
 			children = (
 				AA00020E0000000000000001 /* EurostileExtendedBlack.ttf */,
-				AA00020F0000000000000001 /* BungeeLayers-Regular.otf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -249,7 +246,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA00010E0000000000000001 /* EurostileExtendedBlack.ttf in Resources */,
-				AA00010F0000000000000001 /* BungeeLayers-Regular.otf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
