@@ -32,21 +32,24 @@ struct MainView: View {
                             .foregroundColor(.orange)
                     }
                     
+                    // 留白把内容往下推
+                    Spacer()
+                    
                     // 显示屏
                     DisplayView(height: height, colorScheme: colorScheme, duration: duration)
                         .environmentObject(appModel)
                         .padding(.horizontal, -18)
                     
-                    Spacer(minLength: 10)
+                    Spacer(minLength: 30)
                     
-                    // 键盘区域
+                    // 键盘区域贴底
                     CalculatorButtons(stackSpacing: 12)
                         .environmentObject(appModel)
-                        .frame(height: height * 0.65)
+                        .frame(height: height * 0.5)
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 20)
-                .padding(.bottom, 32)
+                .padding(.top, 60)
+                .padding(.bottom, 20)
             }
         }
     }
