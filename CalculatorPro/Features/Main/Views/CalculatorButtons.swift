@@ -59,10 +59,12 @@ struct CalculatorButtons: View {
                         .frame(width: buttonWidth, height: buttonWidth)
                 }
                 
-                // 第五行：0（占2格宽度）、小数点、等号
+                // 第五行：正负号、0、小数点、等号（与系统计算器一致）
                 HStack(spacing: stackSpacing) {
+                    CalculatorPad(dialPad: .plusMinus)
+                        .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .zero)
-                        .frame(width: buttonWidth * 2 + stackSpacing, height: buttonWidth)
+                        .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .decimal)
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .equal)

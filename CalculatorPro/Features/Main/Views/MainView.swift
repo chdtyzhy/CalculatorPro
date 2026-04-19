@@ -16,7 +16,7 @@ struct MainView: View {
                 Color.background
                     .edgesIgnoringSafeArea(.all)
                 
-                VStack(alignment: .leading, spacing: 16) {
+                VStack(alignment: .leading, spacing: 0) {
                     // 顶部工具栏
                     HStack {
                         // 历史记录图标
@@ -31,25 +31,22 @@ struct MainView: View {
                             .font(.system(size: 22))
                             .foregroundColor(.orange)
                     }
+                    .padding(.top, 10)
                     
-                    // 留白区域
-                    Spacer(minLength: height * 0.08)
-                    
-                    // 显示屏
+                    // 显示屏（固定高度）
                     DisplayView(height: height, colorScheme: colorScheme, duration: duration)
                         .environmentObject(appModel)
                         .padding(.horizontal, -18)
+                        .frame(height: height * 0.28)
                     
-                    Spacer(minLength: 16)
-                    
-                    // 键盘区域
+                    // 键盘区域（固定高度，更贴底）
                     CalculatorButtons(stackSpacing: 12)
                         .environmentObject(appModel)
-                        .frame(height: height * 0.58)
+                        .frame(height: height * 0.52)
                 }
                 .padding(.horizontal, 16)
-                .padding(.top, 50)
-                .padding(.bottom, 30)
+                .padding(.top, 40)
+                .padding(.bottom, 40)
             }
         }
     }

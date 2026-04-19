@@ -14,8 +14,10 @@
 		AA0001050000000000000001 /* CalculatorPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002050000000000000001 /* CalculatorPad.swift */; };
 		AA0001060000000000000001 /* DisplayShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002060000000000000001 /* DisplayShape.swift */; };
 		AA0001070000000000000001 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002070000000000000001 /* MainViewModel.swift */; };
+		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
 		AA0001080000000000000001 /* DialPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002080000000000000001 /* DialPad.swift */; };
 		AA0001090000000000000001 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002090000000000000001 /* Operation.swift */; };
+		AA00010D0000000000000001 /* CalculatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020D0000000000000001 /* CalculatorState.swift */; };
 		AA00010A0000000000000001 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020A0000000000000001 /* Colors.swift */; };
 		AA00010B0000000000000001 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020B0000000000000001 /* FontManager.swift */; };
 		AA00010C0000000000000001 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020C0000000000000001 /* FoundationExtensions.swift */; };
@@ -32,8 +34,10 @@
 		AA0002050000000000000001 /* CalculatorPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorPad.swift; sourceTree = "<group>"; };
 		AA0002060000000000000001 /* DisplayShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayShape.swift; sourceTree = "<group>"; };
 		AA0002070000000000000001 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		AA0002100000000000000001 /* ButtonHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHandlers.swift; sourceTree = "<group>"; };
 		AA0002080000000000000001 /* DialPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialPad.swift; sourceTree = "<group>"; };
 		AA0002090000000000000001 /* Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
+		AA00020D0000000000000001 /* CalculatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorState.swift; sourceTree = "<group>"; };
 		AA00020A0000000000000001 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		AA00020B0000000000000001 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
 		AA00020C0000000000000001 /* FoundationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
@@ -147,6 +151,7 @@
 			children = (
 				AA0002080000000000000001 /* DialPad.swift */,
 				AA0002090000000000000001 /* Operation.swift */,
+				AA00020D0000000000000001 /* CalculatorState.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -155,6 +160,7 @@
 			isa = PBXGroup;
 			children = (
 				AA0002070000000000000001 /* MainViewModel.swift */,
+				AA0002100000000000000001 /* ButtonHandlers.swift */,
 			);
 			path = ViewModels;
 			sourceTree = "<group>";
@@ -267,8 +273,10 @@
 				AA0001050000000000000001 /* CalculatorPad.swift in Sources */,
 				AA0001060000000000000001 /* DisplayShape.swift in Sources */,
 				AA0001070000000000000001 /* MainViewModel.swift in Sources */,
+				AA0001100000000000000001 /* ButtonHandlers.swift in Sources */,
 				AA0001080000000000000001 /* DialPad.swift in Sources */,
 				AA0001090000000000000001 /* Operation.swift in Sources */,
+				AA00010D0000000000000001 /* CalculatorState.swift in Sources */,
 				AA00010A0000000000000001 /* Colors.swift in Sources */,
 				AA00010B0000000000000001 /* FontManager.swift in Sources */,
 				AA00010C0000000000000001 /* FoundationExtensions.swift in Sources */,
