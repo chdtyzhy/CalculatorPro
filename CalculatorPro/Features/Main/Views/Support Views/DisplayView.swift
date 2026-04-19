@@ -8,6 +8,14 @@ struct DisplayView: View {
     let colorScheme: ColorScheme
     let duration: TimeInterval
     
+    // 格式化显示内容（将运算符符号替换为显示符号）
+    private var displayText: String {
+        return mainViewModel.result
+            .replacingOccurrences(of: "/", with: "÷")
+            .replacingOccurrences(of: "*", with: "×")
+            .replacingOccurrences(of: "-", with: "−")
+    }
+    
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             // 默认显示0
@@ -17,7 +25,7 @@ struct DisplayView: View {
                 .opacity(self.mainViewModel.result.isEmpty ? 0.6 : 0)
             
             // 当前输入或计算结果
-            Text(mainViewModel.result)
+            Text(displayText)
                 .foregroundColor(.white)
                 .font(.system(size: 70, weight: .light))
                 .minimumScaleFactor(0.5)
