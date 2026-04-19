@@ -4,25 +4,36 @@ import SwiftUI
 class MainViewModel: ObservableObject {
     @Published var result = ""           // 显示结果
     @Published var resultReady = false   // 是否已完成计算
+    @Published var previousValue: Double = 0  // 上一个操作数
+    @Published var pendingOperation: Operation = .unknown  // 待执行的运算符
 
-    let mathOperations = "+-*/%"
-    var currentOperation: Operation = .unknown
     let maxCalculatorLimit = 10
 
-    // 执行计算
+    // 执行计算（顺序计算模式，与系统计算器一致）
     func calculate() {
         guard !result.isEmpty else { return }
-        guard (!mathOperations.contains(result.suffix(1))) else { return }
-
-        // 将表达式转换为浮点数运算格式
-        var expression = result
-            .replacingOccurrences(of: "/", with: "*1.0/")
         
-        let exp: NSExpression = NSExpression(format: expression)
-        guard let computedValue: Double = exp.expressionValue(with:nil, context: nil) as? Double else { return }
-
+        let currentValue = Double(result) ?? 0
+        var computedValue: Double = 0
+        
+        switch pendingOperation {
+        case .plus:
+            computedValue = previousValue + currentValue
+        case .minus:
+            computedValue = previousValue - currentValue
+        case .multiply:
+            computedValue = previousValue * currentValue
+        case .divide:
+            computedValue = previousValue / currentValue
+        case .modulo:
+            computedValue = previousValue.truncatingRemainder(dividingBy: currentValue)
+        default:
+            computedValue = currentValue
+        }
+        
         self.result = computedValue.clean(places: 6)
-        self.currentOperation = .unknown
+        self.previousValue = computedValue
+        self.pendingOperation = .unknown
         self.resultReady = true
     }
 
@@ -32,28 +43,60 @@ class MainViewModel: ObservableObject {
         case .plusMinus:
             guard let input = Double(result) else { return }
             self.result = (-input).clean(places: 6)
-            self.currentOperation = .unknown
+            self.resultReady = true
         default:
             break
         }
     }
 
-    // 添加运算符
+    // 添加运算符（顺序计算模式）
     func addOperation(operation: Operation) {
-        guard !result.isEmpty || operation == .minus else { return }
-
-        if (currentOperation != .unknown) {
-            if mathOperations.contains(result.suffix(1)) {
-                self.result.removeLast()
-                result += operation.rawValue
-                self.currentOperation = operation
-                return
-            }
+        guard !result.isEmpty else { return }
+        
+        let currentValue = Double(result) ?? 0
+        
+        // 如果有待执行的运算，先计算
+        if pendingOperation != .unknown {
             calculate()
+            previousValue = Double(result) ?? 0
+        } else {
+            previousValue = currentValue
         }
+        
+        pendingOperation = operation
+        resultReady = true  // 标记等待下一个数字输入
+    }
 
-        result += operation.rawValue
-        self.currentOperation = operation
+    // 执行百分比运算（系统计算器逻辑）
+    func calculatePercentage() {
+        guard !result.isEmpty else { return }
+        
+        let currentValue = Double(result) ?? 0
+        var computedValue: Double = 0
+        
+        // 根据待执行的运算符，计算相对百分比
+        switch pendingOperation {
+        case .plus:
+            // 100 + 10% = 100 + (100 × 0.1) = 110
+            computedValue = previousValue + (previousValue * currentValue / 100)
+        case .minus:
+            // 100 - 10% = 100 - (100 × 0.1) = 90
+            computedValue = previousValue - (previousValue * currentValue / 100)
+        case .multiply:
+            // 100 × 10% = 100 × 0.1 = 10
+            computedValue = previousValue * (currentValue / 100)
+        case .divide:
+            // 100 ÷ 10% = 100 ÷ 0.1 = 1000
+            computedValue = previousValue / (currentValue / 100)
+        default:
+            // 没有待执行运算，直接除以100
+            computedValue = currentValue / 100
+        }
+        
+        self.result = computedValue.clean(places: 6)
+        self.previousValue = computedValue
+        self.pendingOperation = .unknown
+        self.resultReady = true
     }
 
     // 处理按钮点击
@@ -61,7 +104,13 @@ class MainViewModel: ObservableObject {
         switch pad {
         case .zero, .one, .two, .three, .four, .five, .six, .seven, .eight, .nine:
             // 数字输入
-            if resultReady && currentOperation == .unknown {
+            if resultReady && pendingOperation == .unknown {
+                // 开始新计算
+                self.result = ""
+                self.previousValue = 0
+                self.resultReady = false
+            } else if resultReady {
+                // 输入运算符后的新数字
                 self.result = ""
                 self.resultReady = false
             }
@@ -76,7 +125,6 @@ class MainViewModel: ObservableObject {
             } else {
                 self.result += digit
             }
-            self.resultReady = false
 
         case .clear:
             reset()
@@ -85,10 +133,7 @@ class MainViewModel: ObservableObject {
             self.set(operation: .plusMinus)
 
         case .percentage:
-            if let value = Double(result) {
-                self.result = (value / 100).clean(places: 6)
-                self.resultReady = true
-            }
+            calculatePercentage()
 
         case .divide:
             self.addOperation(operation: .divide)
@@ -103,13 +148,18 @@ class MainViewModel: ObservableObject {
             self.addOperation(operation: .plus)
 
         case .decimal:
-            if resultReady && currentOperation == .unknown {
+            if resultReady && pendingOperation == .unknown {
+                // 开始新计算
+                self.result = "0"
+                self.previousValue = 0
+                self.resultReady = false
+            } else if resultReady {
+                // 运算符后的小数
                 self.result = "0"
                 self.resultReady = false
             }
 
-            let currentNumber = result.split(whereSeparator: { "+-*/%".contains($0) }).last.map(String.init) ?? result
-            guard !currentNumber.contains(".") else { return }
+            guard !result.contains(".") else { return }
             self.result += pad.rawValue
 
         case .revert:
@@ -128,7 +178,8 @@ class MainViewModel: ObservableObject {
     // 重置计算器
     func reset() {
         self.result = ""
-        self.currentOperation = .unknown
+        self.previousValue = 0
+        self.pendingOperation = .unknown
         self.resultReady = false
     }
 }
