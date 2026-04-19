@@ -14,7 +14,11 @@ class MainViewModel: ObservableObject {
         guard !result.isEmpty else { return }
         guard (!mathOperations.contains(result.suffix(1))) else { return }
 
-        let exp: NSExpression = NSExpression(format: result)
+        // 将表达式转换为浮点数运算格式
+        var expression = result
+            .replacingOccurrences(of: "/", with: "*1.0/")
+        
+        let exp: NSExpression = NSExpression(format: expression)
         guard let computedValue: Double = exp.expressionValue(with:nil, context: nil) as? Double else { return }
 
         self.result = computedValue.clean(places: 6)
