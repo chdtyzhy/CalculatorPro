@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_72" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="EHf-IW-A2E">
+            <objects>
+                <viewController id="01J-lp-oVM" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3" userLabel="LaunchScreen View">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <!-- Background -->
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bgView">
+                                <rect key="frame" x="0" y="0" width="393" height="852"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                            </view>
+                            <!-- Calculator Display Area -->
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="displayArea">
+                                <rect key="frame" x="20" y="200" width="353" height="80"/>
+                                <color key="backgroundColor" red="0.137" green="0.137" blue="0.157" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="displayLabel">
+                                        <rect key="frame" x="20" y="10" width="313" height="60"/>
+                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="64"/>
+                                        <color key="textColor" red="1.0" green="0.624" blue="0.039" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="displayLabel" firstAttribute="leading" secondItem="displayArea" secondAttribute="leading" constant="20" id="dl1"/>
+                                    <constraint firstAttribute="trailing" secondItem="displayLabel" secondAttribute="trailing" constant="20" id="dl2"/>
+                                    <constraint firstItem="displayLabel" firstAttribute="centerY" secondItem="displayArea" secondAttribute="centerY" id="dl3"/>
+                                </constraints>
+                            </view>
+                            <!-- CalculatorPro Title -->
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CalculatorPro" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel">
+                                <rect key="frame" x="40" y="420" width="313" height="40"/>
+                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="32"/>
+                                <color key="textColor" red="0.392" green="0.392" blue="0.412" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                            </label>
+                            <!-- Loading indicator -->
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="spinner">
+                                <rect key="frame" x="186.5" y="500" width="20" height="20"/>
+                                <color key="color" red="1.0" green="0.624" blue="0.039" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                            </activityIndicatorView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="bgView" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="bg1"/>
+                            <constraint firstItem="bgView" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="bg2"/>
+                            <constraint firstItem="bgView" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="bg3"/>
+                            <constraint firstItem="bgView" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="bg4"/>
+                            <constraint firstItem="displayArea" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="dax"/>
+                            <constraint firstItem="displayArea" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="120" id="dat"/>
+                            <constraint firstItem="displayArea" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.9" id="daw"/>
+                            <constraint firstItem="displayArea" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" multiplier="0.1" id="dah"/>
+                            <constraint firstItem="titleLabel" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="tcx"/>
+                            <constraint firstItem="titleLabel" firstAttribute="top" secondItem="displayArea" secondAttribute="bottom" constant="60" id="tct"/>
+                            <constraint firstItem="spinner" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="scx"/>
+                            <constraint firstItem="spinner" firstAttribute="top" secondItem="titleLabel" secondAttribute="bottom" constant="40" id="sct"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="53" y="375"/>
+        </scene>
+    </scenes>
+</document>

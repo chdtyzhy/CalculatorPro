@@ -45,7 +45,7 @@ struct DisplayView: View {
                     .lineLimit(1)
             }
         }
-        .frame(maxWidth: .infinity, maxHeight: height * 0.25, alignment: .bottomTrailing)
+        .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
         .padding(.horizontal, 16)
     }
 }

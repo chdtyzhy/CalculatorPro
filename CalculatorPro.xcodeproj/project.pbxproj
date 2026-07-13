@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */; };
 		AA0001010000000000000001 /* CalculatorProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002010000000000000001 /* CalculatorProApp.swift */; };
 		AA0001020000000000000001 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002020000000000000001 /* MainView.swift */; };
 		AA0001030000000000000001 /* CalculatorButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002030000000000000001 /* CalculatorButtons.swift */; };
@@ -14,18 +15,20 @@
 		AA0001050000000000000001 /* CalculatorPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002050000000000000001 /* CalculatorPad.swift */; };
 		AA0001060000000000000001 /* DisplayShape.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002060000000000000001 /* DisplayShape.swift */; };
 		AA0001070000000000000001 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002070000000000000001 /* MainViewModel.swift */; };
-		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
 		AA0001080000000000000001 /* DialPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002080000000000000001 /* DialPad.swift */; };
 		AA0001090000000000000001 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002090000000000000001 /* Operation.swift */; };
-		AA00010D0000000000000001 /* CalculatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020D0000000000000001 /* CalculatorState.swift */; };
 		AA00010A0000000000000001 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020A0000000000000001 /* Colors.swift */; };
 		AA00010B0000000000000001 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020B0000000000000001 /* FontManager.swift */; };
 		AA00010C0000000000000001 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020C0000000000000001 /* FoundationExtensions.swift */; };
-		AA00010E0000000000000001 /* EurostileExtendedBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020E0000000000000001 /* EurostileExtendedBlack.ttf */; };
-		AA00010F0000000000000001 /* BungeeLayers-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020F0000000000000001 /* BungeeLayers-Regular.otf */; };
+		AA00010D0000000000000001 /* CalculatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020D0000000000000001 /* CalculatorState.swift */; };
+		AA00010E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */; };
+		AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */; };
+		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
+		AA0001110000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0003010000000000000001 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA0000000000000000000001 /* CalculatorPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalculatorPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0002010000000000000001 /* CalculatorProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorProApp.swift; sourceTree = "<group>"; };
 		AA0002020000000000000001 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -34,15 +37,15 @@
 		AA0002050000000000000001 /* CalculatorPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorPad.swift; sourceTree = "<group>"; };
 		AA0002060000000000000001 /* DisplayShape.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayShape.swift; sourceTree = "<group>"; };
 		AA0002070000000000000001 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
-		AA0002100000000000000001 /* ButtonHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHandlers.swift; sourceTree = "<group>"; };
 		AA0002080000000000000001 /* DialPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialPad.swift; sourceTree = "<group>"; };
 		AA0002090000000000000001 /* Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
-		AA00020D0000000000000001 /* CalculatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorState.swift; sourceTree = "<group>"; };
 		AA00020A0000000000000001 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
 		AA00020B0000000000000001 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
 		AA00020C0000000000000001 /* FoundationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
-		AA00020E0000000000000001 /* EurostileExtendedBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/EurostileExtendedBlack.ttf"; sourceTree = "<group>"; };
-		AA00020F0000000000000001 /* BungeeLayers-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/Bungee/BungeeLayers-Regular.otf"; sourceTree = "<group>"; };
+		AA00020D0000000000000001 /* CalculatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorState.swift; sourceTree = "<group>"; };
+		AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fonts/EurostileExtendedBlack.ttf; sourceTree = "<group>"; };
+		AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/Bungee/BungeeLayers-Regular.otf"; sourceTree = "<group>"; };
+		AA0002100000000000000001 /* ButtonHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHandlers.swift; sourceTree = "<group>"; };
 		AA0003010000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -105,9 +108,10 @@
 		AA0004030000000000000001 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
-				AA00020E0000000000000001 /* EurostileExtendedBlack.ttf */,
-				AA00020F0000000000000001 /* BungeeLayers-Regular.otf */,
-			);
+				AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */,
+				AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */,
+			
+				977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */,);
 			path = Resources;
 			sourceTree = "<group>";
 		};
@@ -254,8 +258,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AA00010E0000000000000001 /* EurostileExtendedBlack.ttf in Resources */,
-				AA00010F0000000000000001 /* BungeeLayers-Regular.otf in Resources */,
+				AA00010E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf in Resources */,
+				AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */,
+				AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */,
+				AA0001110000000000000001 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -318,6 +324,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development: yong zhang (A2Z9975YAK)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -381,6 +388,7 @@
 				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "Apple Development: yong zhang (A2Z9975YAK)";
 				COPY_PHASE_STRIP = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -413,7 +421,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 5G746VG79C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CalculatorPro/Resources/Info.plist;
@@ -423,7 +431,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.CalculatorPro;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -440,7 +448,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 5G746VG79C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CalculatorPro/Resources/Info.plist;
@@ -450,7 +458,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.CalculatorPro;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;

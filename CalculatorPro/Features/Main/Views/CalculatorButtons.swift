@@ -7,7 +7,7 @@ struct CalculatorButtons: View {
     
     var body: some View {
         GeometryReader { geometry in
-            // 计算每个按钮的宽度（4列布局）
+            // 计算每个按钮的宽度（4列布局，按屏幕宽度计算保持最大尺寸）
             let buttonWidth = (geometry.size.width - stackSpacing * 3) / 4
             
             VStack(alignment: .leading, spacing: stackSpacing) {

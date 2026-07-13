@@ -179,9 +179,10 @@ struct OperatorHandler: ButtonHandler {
 
         // 如果有待执行的运算，先计算
         if state.pendingOp != .unknown {
-            let result = calculate(state: &state)
-            if result == nil { return nil } // 除以零等情况
-            state.accumulator = Double(state.display) ?? 0
+            guard let result = calculate(state: &state) else {
+                return nil // 除以零等情况
+            }
+            state.accumulator = result
         } else {
             state.accumulator = currentValue
         }

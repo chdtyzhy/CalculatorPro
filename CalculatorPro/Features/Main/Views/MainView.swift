@@ -9,7 +9,11 @@ struct MainView: View {
     
     var body: some View {
         GeometryReader { proxy in
-            let height: CGFloat = proxy.size.height
+            let width: CGFloat = proxy.size.width
+            // 按钮宽度按屏幕宽度计算（4 列），保持最大尺寸
+            let buttonWidth = (width - 16 * 2 - 12 * 3) / 4
+            // 键盘总高度 = 5 行按钮 + 4 个间距，使按钮正好填满
+            let keypadHeight = buttonWidth * 5 + 12 * 4
             
             ZStack(alignment: Alignment(horizontal: .leading, vertical: .top)) {
                 // 黑色背景
@@ -33,16 +37,16 @@ struct MainView: View {
                     }
                     .padding(.top, 10)
                     
-                    // 显示屏（固定高度）
-                    DisplayView(height: height, colorScheme: colorScheme, duration: duration)
+                    // 显示屏（填满中间剩余空间，"0" 底部对齐贴近键盘）
+                    DisplayView(height: 0, colorScheme: colorScheme, duration: duration)
                         .environmentObject(appModel)
                         .padding(.horizontal, -18)
-                        .frame(height: height * 0.28)
+                        .frame(maxWidth: .infinity, maxHeight: .infinity)
                     
-                    // 键盘区域（固定高度，更贴底）
+                    // 键盘区域（固定高度，贴底）
                     CalculatorButtons(stackSpacing: 12)
                         .environmentObject(appModel)
-                        .frame(height: height * 0.52)
+                        .frame(height: keypadHeight)
                 }
                 .padding(.horizontal, 16)
                 .padding(.top, 40)
