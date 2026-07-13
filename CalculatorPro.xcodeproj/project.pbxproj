@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */; };
 		AA0001010000000000000001 /* CalculatorProApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002010000000000000001 /* CalculatorProApp.swift */; };
 		AA0001020000000000000001 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002020000000000000001 /* MainView.swift */; };
 		AA0001030000000000000001 /* CalculatorButtons.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002030000000000000001 /* CalculatorButtons.swift */; };
@@ -25,6 +24,7 @@
 		AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */; };
 		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
 		AA0001110000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0003010000000000000001 /* Assets.xcassets */; };
+		AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -110,8 +110,8 @@
 			children = (
 				AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */,
 				AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */,
-			
-				977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */,);
+				977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */,
+			);
 			path = Resources;
 			sourceTree = "<group>";
 		};
@@ -418,6 +418,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -434,9 +435,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -445,6 +450,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -461,9 +467,13 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.pro;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
