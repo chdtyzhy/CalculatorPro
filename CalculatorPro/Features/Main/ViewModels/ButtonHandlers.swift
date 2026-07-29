@@ -276,35 +276,11 @@ struct OperatorHandler: ButtonHandler {
     }
 }
 
-// MARK: - 减号处理器（区分负号和减运算符）
+// MARK: - 减号处理器
 
 struct SubtractHandler: ButtonHandler {
     func handle(state: inout CalculatorState) -> CalculatorUpdate? {
-        // 判断是作为负号还是减运算符
-        let canBeNegativeSign =
-            (state.pendingOp == .unknown && state.isEmptyOrZero) ||
-            (state.pendingOp != .unknown && state.isReadyForInput)
-
-        if canBeNegativeSign {
-            // 作为负号处理
-            let wasReady = state.isReadyForInput
-            state.display = "-0"
-            state.isReadyForInput = false
-
-            // 更新表达式（如果是刚输入运算符后的负号）
-            if wasReady && !state.expression.isEmpty {
-                state.expression += state.display
-            }
-
-            return CalculatorUpdate(
-                display: state.display,
-                expression: state.expression,
-                isReadyForInput: state.isReadyForInput
-            )
-        } else {
-            // 作为减运算符处理
-            return OperatorHandler(operation: .minus).handle(state: &state)
-        }
+        OperatorHandler(operation: .minus).handle(state: &state)
     }
 }
 

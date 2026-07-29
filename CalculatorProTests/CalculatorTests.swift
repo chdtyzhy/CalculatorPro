@@ -279,13 +279,17 @@ class CalculatorTests: XCTestCase {
         XCTAssertEqual(viewModel.result, "-9", "先切换正负号再输入9应该是 -9")
     }
     
-    func testMinusAsNegativeSign() {
-        // 测试: 初始状态按减号输入负数 -9
-        tap(.substract)  // 初始状态按减号作为负号
+    func testInitialMinusStartsSubtractionFromZero() {
+        tap(.substract)
+
+        XCTAssertEqual(viewModel.result, "0")
+        XCTAssertEqual(viewModel.currentExpression, "0−")
+
         tapNumber("9")
-        
-        print("【测试】初始按减号 → 9 = \(viewModel.result)")
-        XCTAssertEqual(viewModel.result, "-9", "初始按减号输入9应该是 -9")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "-9")
+        XCTAssertEqual(viewModel.previousResult, "0−9")
     }
     
     func testNegativeMultiplyByNegative() {
@@ -305,22 +309,19 @@ class CalculatorTests: XCTestCase {
         XCTAssertEqual(viewModel.result, "54", "-9 × -6 应该等于 54")
     }
     
-    func testNegativeMultiplyByNegativeUsingMinusSign() {
-        // 测试: -9 × -6 = 54 (使用减号作为负号方式)
-        // 输入 -9
-        tapNumber("9")
-        tap(.substract)  // 作为运算符，结果应该保留
-        viewModel.reset()
-        // 重新用正确方式：先输入 9，切换正负
-        tapNumber("9")
-        viewModel.set(operation: .plusMinus)  // -9
-        tap(.multiply)  // 乘号，result 重置为 0
-        tap(.substract)  // 减号作为负号（因为 resultReady = true）
-        tapNumber("6")  // -6
+    func testMinusReplacesPendingMultiplyOperator() {
+        tapNumber("6")
+        tap(.multiply)
+        tap(.substract)
+
+        XCTAssertEqual(viewModel.result, "6")
+        XCTAssertEqual(viewModel.currentExpression, "6−")
+
+        tapNumber("2")
         tap(.equal)
-        
-        print("【测试】-9 × -6 (使用减号作为负号) = \(viewModel.result)")
-        XCTAssertEqual(viewModel.result, "54", "-9 × -6 应该等于 54")
+
+        XCTAssertEqual(viewModel.result, "4")
+        XCTAssertEqual(viewModel.previousResult, "6−2")
     }
     
     func testTogglePlusMinus() {
@@ -658,7 +659,7 @@ class CalculatorTests: XCTestCase {
     func testRevertNegativeSecondOperandKeepsExpressionAndValueConsistent() {
         tapNumber("5")
         tap(.plus)
-        tap(.substract)
+        tap(.plusMinus)
         tapNumber("2")
         tap(.revert)
 
