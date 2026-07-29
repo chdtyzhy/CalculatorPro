@@ -25,7 +25,6 @@
 		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
 		AA0001110000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0003010000000000000001 /* Assets.xcassets */; };
 		AA1001010000000000000001 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1002010000000000000001 /* CalculatorTests.swift */; };
-		AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,7 +38,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AA0000000000000000000001 /* CalculatorPro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CalculatorPro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA0002010000000000000001 /* CalculatorProApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorProApp.swift; sourceTree = "<group>"; };
 		AA0002020000000000000001 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
@@ -132,7 +130,6 @@
 			children = (
 				AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */,
 				AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */,
-				977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -315,7 +312,6 @@
 			files = (
 				AA00010E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf in Resources */,
 				AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */,
-				AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */,
 				AA0001110000000000000001 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
