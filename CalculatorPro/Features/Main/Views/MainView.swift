@@ -21,22 +21,6 @@ struct MainView: View {
                     .edgesIgnoringSafeArea(.all)
                 
                 VStack(alignment: .leading, spacing: 0) {
-                    // 顶部工具栏
-                    HStack {
-                        // 历史记录图标
-                        Image(systemName: "clock.arrow.circlepath")
-                            .font(.system(size: 22))
-                            .foregroundColor(.white)
-                        
-                        Spacer()
-                        
-                        // 计算器模式图标
-                        Image(systemName: "square.grid.2x2")
-                            .font(.system(size: 22))
-                            .foregroundColor(.orange)
-                    }
-                    .padding(.top, 10)
-                    
                     // 显示屏（填满中间剩余空间，"0" 底部对齐贴近键盘）
                     DisplayView(height: 0, colorScheme: colorScheme, duration: duration)
                         .environmentObject(appModel)

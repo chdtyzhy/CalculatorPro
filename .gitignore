@@ -98,6 +98,9 @@ TOOLS.md
 HEARTBEAT.md
 BOOTSTRAP.md
 
+# Repository AI workflow rules are intentionally versioned.
+!/AGENTS.md
+
 # 测试和日志文件
 skill_install_output.log
 skill_installation_log.md
