@@ -36,7 +36,8 @@ struct DigitHandler: ButtonHandler {
             state.isReadyForInput = false
         }
 
-        guard state.display.count < state.maxDigits else { return nil }
+        let digitCount = state.display.filter(\.isNumber).count
+        guard digitCount < state.maxDigits else { return nil }
 
         let wasEmpty = state.display.isEmpty
 
@@ -93,10 +94,8 @@ struct DecimalHandler: ButtonHandler {
 
         if state.isReadyForInput && state.pendingOp == .unknown {
             // 开始新计算
+            state.prepareForNewCalculation()
             state.display = "0"
-            state.expression = ""
-            state.previousResult = ""
-            state.accumulator = 0
             state.isReadyForInput = false
         } else if state.isReadyForInput {
             // 运算符后的小数
@@ -133,8 +132,14 @@ struct PlusMinusHandler: ButtonHandler {
         let oldDisplay = state.display
         let wasReady = state.isReadyForInput
 
+        if wasReady && state.pendingOp == .unknown {
+            state.clearRepeatedOperation()
+        }
+
         // 切换正负号
-        if state.display == "0" || state.display.isEmpty {
+        if wasReady && state.pendingOp != .unknown {
+            state.display = "-0"
+        } else if state.display == "0" || state.display.isEmpty {
             state.display = "-0"
         } else if state.display == "-0" {
             state.display = "0"
@@ -175,7 +180,22 @@ struct OperatorHandler: ButtonHandler {
         guard !state.display.isEmpty else { return nil }
         guard !state.isUndefined else { return nil }
 
-        let currentValue = state.numericValue
+        let opSymbol = symbol(for: operation)
+
+        // 连续点击运算符时只替换待执行运算，不使用占位显示值 0 参与计算。
+        if state.isReadyForInput && state.pendingOp != .unknown {
+            state.pendingOp = operation
+            if !state.expression.isEmpty {
+                state.expression.removeLast()
+                state.expression += opSymbol
+            } else {
+                state.expression = state.accumulator.clean(places: 6) + opSymbol
+            }
+            return CalculatorUpdate(expression: state.expression)
+        }
+
+        // 计算结果虽然只显示 6 位小数，但继续运算时应保留内部精度。
+        let currentValue = state.isReadyForInput ? state.accumulator : state.numericValue
 
         // 如果有待执行的运算，先计算
         if state.pendingOp != .unknown {
@@ -188,11 +208,10 @@ struct OperatorHandler: ButtonHandler {
         }
 
         // 构建表达式
-        let opSymbol = symbol(for: operation)
         state.expression = state.display + opSymbol
 
         state.pendingOp = operation
-        state.clearForOperatorInput()
+        state.prepareForOperandInput()
 
         return CalculatorUpdate(
             display: state.display,
@@ -212,9 +231,9 @@ struct OperatorHandler: ButtonHandler {
         }
     }
 
-    private func calculate(state: inout CalculatorState) -> Double? {
+    private func calculate(state: inout CalculatorState) -> Decimal? {
         let currentValue = state.numericValue
-        var result: Double = 0
+        var result: Decimal = 0
 
         switch state.pendingOp {
         case .plus:
@@ -234,12 +253,16 @@ struct OperatorHandler: ButtonHandler {
                 state.setUndefined()
                 return nil
             }
-            result = state.accumulator.truncatingRemainder(dividingBy: currentValue)
+            let remainder = NSDecimalNumber(decimal: state.accumulator).doubleValue
+                .truncatingRemainder(
+                    dividingBy: NSDecimalNumber(decimal: currentValue).doubleValue
+                )
+            result = Decimal(remainder)
         default:
             result = currentValue
         }
 
-        if result.isNaN || result.isInfinite {
+        if result.isNaN {
             state.setUndefined()
             return nil
         }
@@ -254,8 +277,9 @@ struct OperatorHandler: ButtonHandler {
 struct SubtractHandler: ButtonHandler {
     func handle(state: inout CalculatorState) -> CalculatorUpdate? {
         // 判断是作为负号还是减运算符
-        let canBeNegativeSign = state.isEmptyOrZero &&
-            (state.pendingOp == .unknown || state.isReadyForInput)
+        let canBeNegativeSign =
+            (state.pendingOp == .unknown && state.isEmptyOrZero) ||
+            (state.pendingOp != .unknown && state.isReadyForInput)
 
         if canBeNegativeSign {
             // 作为负号处理
@@ -286,10 +310,25 @@ struct EqualHandler: ButtonHandler {
     func handle(state: inout CalculatorState) -> CalculatorUpdate? {
         guard !state.display.isEmpty else { return nil }
 
-        let currentValue = state.numericValue
-        var result: Double = 0
+        let isRepeatedEqual = state.pendingOp == .unknown &&
+            state.isReadyForInput &&
+            state.repeatedOp != .unknown &&
+            state.repeatedOperand != nil
+        let operation = isRepeatedEqual ? state.repeatedOp : state.pendingOp
+        let usesAccumulatorAsOperand = state.isReadyForInput && state.pendingOp != .unknown
+        let currentValue: Decimal
 
-        switch state.pendingOp {
+        if isRepeatedEqual {
+            currentValue = state.repeatedOperand!
+        } else if usesAccumulatorAsOperand {
+            currentValue = state.accumulator
+        } else {
+            currentValue = state.numericValue
+        }
+
+        var result: Decimal = 0
+
+        switch operation {
         case .plus:
             result = state.accumulator + currentValue
         case .minus:
@@ -307,18 +346,36 @@ struct EqualHandler: ButtonHandler {
                 state.setUndefined()
                 return CalculatorUpdate(display: state.display, expression: state.expression)
             }
-            result = state.accumulator.truncatingRemainder(dividingBy: currentValue)
+            let remainder = NSDecimalNumber(decimal: state.accumulator).doubleValue
+                .truncatingRemainder(
+                    dividingBy: NSDecimalNumber(decimal: currentValue).doubleValue
+                )
+            result = Decimal(remainder)
         default:
             result = currentValue
         }
 
-        if result.isNaN || result.isInfinite {
+        if result.isNaN {
             state.setUndefined()
             return CalculatorUpdate(display: state.display, expression: state.expression)
         }
 
-        // 保存上一次结果到顶部显示
-        state.previousResult = state.expression + state.display
+        let operandDisplay = usesAccumulatorAsOperand
+            ? currentValue.clean(places: 6)
+            : state.display
+        if isRepeatedEqual {
+            state.previousResult = state.display + symbol(for: operation) + currentValue.clean(places: 6)
+        } else {
+            state.previousResult = state.expression.hasSuffix(operandDisplay)
+                ? state.expression
+                : state.expression + operandDisplay
+        }
+
+        if operation != .unknown {
+            state.repeatedOp = operation
+            state.repeatedOperand = currentValue
+        }
+
         state.display = result.clean(places: 6)
         state.expression = ""
         state.accumulator = result
@@ -332,6 +389,17 @@ struct EqualHandler: ButtonHandler {
             isReadyForInput: state.isReadyForInput
         )
     }
+
+    private func symbol(for operation: Operation) -> String {
+        switch operation {
+        case .plus: return "+"
+        case .minus: return "−"
+        case .multiply: return "×"
+        case .divide: return "÷"
+        case .modulo: return "%"
+        default: return ""
+        }
+    }
 }
 
 // MARK: - 百分比处理器
@@ -341,8 +409,10 @@ struct PercentageHandler: ButtonHandler {
         guard !state.display.isEmpty else { return nil }
         guard !state.isUndefined else { return nil }
 
-        let currentValue = state.numericValue
-        var result: Double = 0
+        // 仅运算符后的等待态缺少右操作数；已完成计算时应继续使用当前结果。
+        let isWaitingForOperand = state.isReadyForInput && state.pendingOp != .unknown
+        let currentValue: Decimal = isWaitingForOperand ? 0 : state.numericValue
+        var result: Decimal = 0
 
         switch state.pendingOp {
         case .plus:
@@ -361,19 +431,28 @@ struct PercentageHandler: ButtonHandler {
             result = currentValue / 100
         }
 
-        if result.isNaN || result.isInfinite {
+        if result.isNaN {
             state.setUndefined()
             return CalculatorUpdate(display: state.display, expression: state.expression)
         }
 
+        let operandDisplay = state.isReadyForInput
+            ? currentValue.clean(places: 6)
+            : state.display
+        state.previousResult = state.expression.hasSuffix(operandDisplay)
+            ? state.expression + "%"
+            : state.expression + operandDisplay + "%"
         state.display = result.clean(places: 6)
+        state.expression = ""
         state.accumulator = result
         state.pendingOp = .unknown
         state.isReadyForInput = true
+        state.clearRepeatedOperation()
 
         return CalculatorUpdate(
             display: state.display,
             expression: state.expression,
+            previousResult: state.previousResult,
             isReadyForInput: state.isReadyForInput
         )
     }
@@ -402,8 +481,11 @@ struct RevertHandler: ButtonHandler {
             return CalculatorUpdate(display: state.display)
         }
 
+        // 等待新操作数时退格不应删除保留的左操作数或表达式中的运算符。
+        guard !state.isReadyForInput else { return nil }
         guard !state.display.isEmpty else { return nil }
 
+        let oldDisplay = state.display
         state.display.removeLast()
 
         // 如果只剩负号或为空，重置为0
@@ -411,9 +493,12 @@ struct RevertHandler: ButtonHandler {
             state.display = "0"
         }
 
-        // 更新表达式
-        if !state.expression.isEmpty {
-            state.expression.removeLast()
+        // 用完整操作数替换表达式尾部，避免负号与显示值失去同步。
+        if !state.expression.isEmpty && state.expression.hasSuffix(oldDisplay) {
+            state.expression.removeLast(oldDisplay.count)
+            if state.display != "0" {
+                state.expression += state.display
+            }
         }
 
         return CalculatorUpdate(display: state.display, expression: state.expression)

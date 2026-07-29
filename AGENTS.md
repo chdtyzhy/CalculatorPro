@@ -35,7 +35,7 @@
 5. **新增或修改 UI 先查现有规范**：动手前阅读 [UI设计规范.md](UI设计规范.md)，并检查现有 SwiftUI 组件和语义颜色，优先复用已有能力。
 6. **不得修改历史工程备份**：`project.pbxproj.backup*` 只是历史文件，不是工程真源，任何情况下都不要编辑。
 7. **必须保留用户已有改动**：工作区可能存在未提交修改，只处理当前任务涉及的文件；暂存和提交时也必须精确控制范围。
-8. **验证结论必须真实**：当前 Xcode 工程没有单元测试 Target；只完成 App 构建时，只能说明 build 成功，不能声称测试通过。
+8. **验证结论必须真实**：当前 Xcode 工程包含 `CalculatorProTests` 单元测试 Target；测试结论必须来自当前 XCTest 实际输出。
 
 执行口径：
 
@@ -62,7 +62,7 @@
 - 数值显示格式统一由 Foundation 扩展处理，不要在 View 中复制格式化规则。
 - 连续运算保持从左到右的系统计算器式行为。
 - 修改计算行为时，必须覆盖正常输入、连续运算、小数、负数、百分比、除零、清空和退格等相关边界。
-- 新增或修改测试时，应直接测试正式业务实现。若需要执行 XCTest，先把 `CalculatorProTests` 接入真实 Xcode 测试 Target，不使用历史模拟脚本冒充正式测试。
+- 新增或修改测试时，应直接测试正式业务实现，并通过 `CalculatorProTests` Target 执行，不使用历史模拟脚本冒充正式测试。
 
 ## 版本与发布规则
 
@@ -106,11 +106,11 @@
 
 ## 项目特有验证限制
 
-- 当前 `CalculatorPro.xcodeproj` 只有 App Target，没有 XCTest Target。
-- `CalculatorProTests/CalculatorTests.swift` 是待接入的测试资产，目前不能通过现有 Scheme 执行。
+- 当前 `CalculatorPro.xcodeproj` 包含 App Target 和 `CalculatorProTests` XCTest Target。
+- `CalculatorProTests/CalculatorTests.swift` 通过现有 `CalculatorPro` Scheme 执行。
 - `test_calculator.swift` 复制了一份历史计算逻辑，只能作为参考，不能证明正式实现正确。
 - `test_results.md` 是历史人工记录，不代表当前版本的实时测试结果。
-- 在测试 Target 接入前，默认验收标准为静态检查和 App build 成功。
+- 默认验收标准为静态检查、App build 成功和当前 XCTest 全部通过。
 
 ## 适用场景速查
 
@@ -123,7 +123,7 @@
 | 修改版本号或构建号 | `SOURCE_OF_TRUTH.md`、Xcode build settings、`Info.plist` | `./scripts/verify.sh` 并核对版本输出 |
 | 修改隐私政策或支持页 | `docs/` 真源与 GitHub Pages 地址 | HTML 检查 + 线上 URL 验证 |
 | 生成 App Store 截图 | 当前真实 App、目标模拟器尺寸、稳定状态栏 | 检查 PNG 像素尺寸和画面内容 |
-| 新增或执行单元测试 | 先确认测试 Target 是否已接入 | 不得把历史脚本当成 XCTest |
+| 新增或执行单元测试 | `CalculatorProTests` Target 与正式业务实现 | `./scripts/verify.sh`，不得把历史脚本当成 XCTest |
 
 ## 提交与交付规则
 

@@ -15,13 +15,13 @@ not maintain conflicting copies.
 | Public privacy page | `docs/privacy-policy.html` | Published through GitHub Pages. |
 | Public support page | `docs/support.html` | Published through GitHub Pages. |
 | Build verification | `scripts/build.sh` | Debug iOS Simulator build without signing. |
-| Full static verification | `scripts/verify.sh` | Metadata checks plus build. |
+| Full verification | `scripts/verify.sh` | Metadata checks, simulator build, and XCTest. |
 
 ## Test Assets
 
-`CalculatorProTests/CalculatorTests.swift` contains intended XCTest coverage,
-but the current Xcode project has no test target. It is not executable through
-the `CalculatorPro` scheme yet.
+`CalculatorProTests/CalculatorTests.swift` is connected to the
+`CalculatorProTests` XCTest target and runs through the `CalculatorPro` scheme.
+`scripts/verify.sh` is the required entry point for build and test verification.
 
 `test_calculator.swift` is a historical standalone simulation with duplicated
 calculator logic. It is useful as reference material only and is not proof that

@@ -24,8 +24,19 @@
 		AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */; };
 		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
 		AA0001110000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0003010000000000000001 /* Assets.xcassets */; };
+		AA1001010000000000000001 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1002010000000000000001 /* CalculatorTests.swift */; };
 		AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		AA1000100000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA0000600000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA0000500000000000000001;
+			remoteInfo = CalculatorPro;
+		};
+/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		977124A456A4231CA75AA9BF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -47,10 +58,19 @@
 		AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/Bungee/BungeeLayers-Regular.otf"; sourceTree = "<group>"; };
 		AA0002100000000000000001 /* ButtonHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHandlers.swift; sourceTree = "<group>"; };
 		AA0003010000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		AA1000000000000000000001 /* CalculatorProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalculatorProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA1002010000000000000001 /* CalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		AA0000200000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA1000200000000000000001 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -64,6 +84,7 @@
 			isa = PBXGroup;
 			children = (
 				AA0000400000000000000001 /* CalculatorPro */,
+				AA1000400000000000000001 /* CalculatorProTests */,
 				AA0000310000000000000001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -72,6 +93,7 @@
 			isa = PBXGroup;
 			children = (
 				AA0000000000000000000001 /* CalculatorPro.app */,
+				AA1000000000000000000001 /* CalculatorProTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -197,6 +219,14 @@
 			path = "Support Shapes";
 			sourceTree = "<group>";
 		};
+		AA1000400000000000000001 /* CalculatorProTests */ = {
+			isa = PBXGroup;
+			children = (
+				AA1002010000000000000001 /* CalculatorTests.swift */,
+			);
+			path = CalculatorProTests;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -219,6 +249,26 @@
 			productReference = AA0000000000000000000001 /* CalculatorPro.app */;
 			productType = "com.apple.product-type.application";
 		};
+		AA1000500000000000000001 /* CalculatorProTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA1000510000000000000001 /* Build configuration list for PBXNativeTarget "CalculatorProTests" */;
+			buildPhases = (
+				AA1000520000000000000001 /* Sources */,
+				AA1000200000000000000001 /* Frameworks */,
+				AA1000530000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA1000120000000000000001 /* PBXTargetDependency */,
+			);
+			name = CalculatorProTests;
+			packageProductDependencies = (
+			);
+			productName = CalculatorProTests;
+			productReference = AA1000000000000000000001 /* CalculatorProTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -231,6 +281,10 @@
 				TargetAttributes = {
 					AA0000500000000000000001 = {
 						CreatedOnToolsVersion = 16.0;
+					};
+					AA1000500000000000000001 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = AA0000500000000000000001;
 					};
 				};
 			};
@@ -249,6 +303,7 @@
 			projectRoot = "";
 			targets = (
 				AA0000500000000000000001 /* CalculatorPro */,
+				AA1000500000000000000001 /* CalculatorProTests */,
 			);
 		};
 /* End PBXProject section */
@@ -262,6 +317,13 @@
 				AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */,
 				AAF06C6C084F9728422EFA4A /* LaunchScreen.storyboard in Resources */,
 				AA0001110000000000000001 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA1000530000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -289,7 +351,23 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA1000520000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA1001010000000000000001 /* CalculatorTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		AA1000120000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA0000500000000000000001 /* CalculatorPro */;
+			targetProxy = AA1000100000000000000001 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		AA0000700000000000000001 /* Debug */ = {
@@ -421,7 +499,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 5G746VG79C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -453,7 +531,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 8;
 				DEVELOPMENT_TEAM = 5G746VG79C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -477,6 +555,48 @@
 			};
 			name = Release;
 		};
+		AA1000800000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.proTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CalculatorPro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CalculatorPro";
+				TEST_TARGET_NAME = CalculatorPro;
+			};
+			name = Debug;
+		};
+		AA1000810000000000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.proTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CalculatorPro.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CalculatorPro";
+				TEST_TARGET_NAME = CalculatorPro;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -494,6 +614,15 @@
 			buildConfigurations = (
 				AA0000700000000000000001 /* Debug */,
 				AA0000710000000000000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA1000510000000000000001 /* Build configuration list for PBXNativeTarget "CalculatorProTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA1000800000000000000001 /* Debug */,
+				AA1000810000000000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

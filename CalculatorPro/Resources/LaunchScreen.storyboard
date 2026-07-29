@@ -37,8 +37,8 @@
                                     <constraint firstItem="displayLabel" firstAttribute="centerY" secondItem="displayArea" secondAttribute="centerY" id="dl3"/>
                                 </constraints>
                             </view>
-                            <!-- CalculatorPro Title -->
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="CalculatorPro" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel">
+                            <!-- App Title -->
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="芃芃计算器" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel">
                                 <rect key="frame" x="40" y="420" width="313" height="40"/>
                                 <fontDescription key="fontDescription" type="system" weight="thin" pointSize="32"/>
                                 <color key="textColor" red="0.392" green="0.392" blue="0.412" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>

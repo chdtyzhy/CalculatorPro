@@ -41,6 +41,15 @@ class CalculatorTests: XCTestCase {
             }
         }
     }
+
+    func tapSignedNumber(_ number: String) {
+        if number.hasPrefix("-") {
+            tap(.plusMinus)
+            tapNumber(String(number.dropFirst()))
+        } else {
+            tapNumber(number)
+        }
+    }
     
     // MARK: - 基础运算测试
     func testBasicDivision() {
@@ -178,6 +187,33 @@ class CalculatorTests: XCTestCase {
         
         print("【测试】50 % = \(viewModel.result)")
         XCTAssertEqual(viewModel.result, "0.5", "50% 应该等于 0.5")
+    }
+
+    func testPercentageInEachOperationContext() {
+        let cases: [(DialPad, String)] = [
+            (.plus, "220"),
+            (.substract, "180"),
+            (.multiply, "20"),
+            (.divide, "2000")
+        ]
+
+        for (operation, expected) in cases {
+            viewModel = MainViewModel()
+            tapNumber("200")
+            tap(operation)
+            tapNumber("10")
+            tap(.percentage)
+            XCTAssertEqual(viewModel.result, expected)
+        }
+    }
+
+    func testDivideByZeroPercentageIsUndefined() {
+        tapNumber("200")
+        tap(.divide)
+        tapNumber("0")
+        tap(.percentage)
+
+        XCTAssertEqual(viewModel.result, "未定义")
     }
     
     // MARK: - 边界条件测试
@@ -394,6 +430,29 @@ class CalculatorTests: XCTestCase {
         print("【测试】表达式显示（输入第二个操作数后）: \(viewModel.currentExpression)")
         XCTAssertEqual(viewModel.currentExpression, "8×7", "输入 8 × 7 应该显示 8×7")
     }
+
+    func testOperatorKeepsCurrentDisplayUntilNextOperandInput() {
+        let cases: [(DialPad, String)] = [
+            (.plus, "9+"),
+            (.substract, "9−"),
+            (.multiply, "9×"),
+            (.divide, "9÷")
+        ]
+
+        for (operation, expression) in cases {
+            viewModel = MainViewModel()
+            tapNumber("9")
+            tap(operation)
+
+            XCTAssertEqual(viewModel.result, "9")
+            XCTAssertEqual(viewModel.currentExpression, expression)
+            XCTAssertTrue(viewModel.resultReady)
+
+            tapNumber("2")
+            XCTAssertEqual(viewModel.result, "2")
+            XCTAssertEqual(viewModel.currentExpression, expression + "2")
+        }
+    }
     
     // MARK: - 连续运算边界测试
     func testContinuousOperations() {
@@ -420,6 +479,287 @@ class CalculatorTests: XCTestCase {
         print("【测试】5 + = \(viewModel.result)")
         // 应该等于 5 + 5 = 10 (系统计算器通常这样处理)
         XCTAssertEqual(viewModel.result, "10", "5 + = 应该等于 10")
+    }
+
+    func testImmediateEqualAfterEachOperator() {
+        let cases: [(DialPad, String)] = [
+            (.plus, "10"),
+            (.substract, "0"),
+            (.multiply, "25"),
+            (.divide, "1")
+        ]
+
+        for (operation, expected) in cases {
+            viewModel = MainViewModel()
+            tapNumber("5")
+            tap(operation)
+            tap(.equal)
+            XCTAssertEqual(viewModel.result, expected)
+        }
+    }
+
+    func testReplacingPendingOperatorDoesNotCalculateWithPlaceholderZero() {
+        tapNumber("8")
+        tap(.multiply)
+        tap(.plus)
+        tapNumber("2")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "10")
+        XCTAssertEqual(viewModel.previousResult, "8+2")
+    }
+
+    func testReplacingDivideOperatorDoesNotEnterUndefinedState() {
+        tapNumber("8")
+        tap(.divide)
+        tap(.plus)
+        tapNumber("2")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "10")
+    }
+
+    func testCalculationResultRetainsInternalPrecision() {
+        tapNumber("1")
+        tap(.divide)
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "0.333333")
+
+        tap(.multiply)
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "1")
+    }
+
+    func testRevertImmediatelyAfterOperatorDoesNotCorruptExpression() {
+        tapNumber("12")
+        tap(.plus)
+        tap(.revert)
+
+        XCTAssertEqual(viewModel.currentExpression, "12+")
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "15")
+        XCTAssertEqual(viewModel.previousResult, "12+3")
+    }
+
+    func testMaximumInputDigits() {
+        tapNumber("12345678901")
+        XCTAssertEqual(viewModel.result, "1234567890")
+    }
+
+    func testMaximumLengthIntegerMultiplicationIsExact() {
+        tapNumber("9999999999")
+        tap(.multiply)
+        tapNumber("9999999999")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "99999999980000000001")
+    }
+
+    func testNegativeAndDecimalInputsHonorMaximumDigitCount() {
+        tap(.plusMinus)
+        tapNumber("1234567890")
+        XCTAssertEqual(viewModel.result, "-1234567890")
+
+        viewModel = MainViewModel()
+        tapNumber("1.234567890")
+        XCTAssertEqual(viewModel.result, "1.234567890")
+    }
+
+    func testRevertNegativeSecondOperandKeepsExpressionAndValueConsistent() {
+        tapNumber("5")
+        tap(.plus)
+        tap(.substract)
+        tapNumber("2")
+        tap(.revert)
+
+        XCTAssertEqual(viewModel.result, "0")
+        XCTAssertEqual(viewModel.currentExpression, "5+")
+
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "8")
+        XCTAssertEqual(viewModel.previousResult, "5+3")
+    }
+
+    func testPercentageCompletesExpressionState() {
+        tapNumber("200")
+        tap(.plus)
+        tapNumber("10")
+        tap(.percentage)
+
+        XCTAssertEqual(viewModel.result, "220")
+        XCTAssertEqual(viewModel.currentExpression, "")
+        XCTAssertEqual(viewModel.previousResult, "200+10%")
+    }
+
+    func testRepeatedEqualReusesLastOperation() {
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "5")
+
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "8")
+
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "11")
+    }
+
+    func testRepeatedEqualForEachOperator() {
+        let cases: [(DialPad, String, String, String, String)] = [
+            (.plus, "2", "3", "5", "8"),
+            (.substract, "10", "2", "8", "6"),
+            (.multiply, "3", "2", "6", "12"),
+            (.divide, "20", "2", "10", "5")
+        ]
+
+        for (operation, lhs, rhs, firstResult, repeatedResult) in cases {
+            viewModel = MainViewModel()
+            tapNumber(lhs)
+            tap(operation)
+            tapNumber(rhs)
+            tap(.equal)
+            XCTAssertEqual(viewModel.result, firstResult)
+
+            tap(.equal)
+            XCTAssertEqual(viewModel.result, repeatedResult)
+        }
+    }
+
+    func testRepeatedEqualStateDoesNotLeakIntoNewInputOrPercentage() {
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("3")
+        tap(.equal)
+        tap(.equal)
+
+        tapNumber("4")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "4")
+
+        viewModel = MainViewModel()
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("3")
+        tap(.equal)
+        tap(.percentage)
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "0.05")
+    }
+
+    func testPercentageAfterCompletedCalculationUsesDisplayedResult() {
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("3")
+        tap(.equal)
+        tap(.percentage)
+
+        XCTAssertEqual(viewModel.result, "0.05")
+        XCTAssertEqual(viewModel.previousResult, "5%")
+    }
+
+    func testMaximumDigitCountAppliesToSecondOperand() {
+        tapNumber("1")
+        tap(.plus)
+        tap(.plusMinus)
+        tapNumber("12345678901")
+        XCTAssertEqual(viewModel.result, "-1234567890")
+        XCTAssertEqual(viewModel.currentExpression, "1+-1234567890")
+
+        viewModel = MainViewModel()
+        tapNumber("1")
+        tap(.plus)
+        tapNumber("1.2345678901")
+        XCTAssertEqual(viewModel.result, "1.234567890")
+        XCTAssertEqual(viewModel.currentExpression, "1+1.234567890")
+    }
+
+    func testRevertKeepsExpressionConsistentAcrossOperandForms() {
+        tapNumber("5")
+        tap(.plus)
+        tapNumber("12.3")
+        tap(.revert)
+        XCTAssertEqual(viewModel.result, "12.")
+        XCTAssertEqual(viewModel.currentExpression, "5+12.")
+
+        viewModel = MainViewModel()
+        tapNumber("5")
+        tap(.plus)
+        tap(.plusMinus)
+        tapNumber("12")
+        tap(.revert)
+        XCTAssertEqual(viewModel.result, "-1")
+        XCTAssertEqual(viewModel.currentExpression, "5+-1")
+
+        tap(.revert)
+        XCTAssertEqual(viewModel.result, "0")
+        XCTAssertEqual(viewModel.currentExpression, "5+")
+    }
+
+    func testAllSmallIntegerOperandCombinations() {
+        let operations: [(DialPad, (Decimal, Decimal) -> Decimal)] = [
+            (.plus, +),
+            (.substract, -),
+            (.multiply, *),
+            (.divide, /)
+        ]
+
+        for lhs in -20...20 {
+            for rhs in -20...20 {
+                for (operation, calculate) in operations {
+                    if operation == .divide && rhs == 0 { continue }
+
+                    viewModel = MainViewModel()
+                    tapSignedNumber(String(lhs))
+                    tap(operation)
+                    tapSignedNumber(String(rhs))
+                    tap(.equal)
+
+                    let expected = calculate(Decimal(lhs), Decimal(rhs)).clean(places: 6)
+                    XCTAssertEqual(
+                        viewModel.result,
+                        expected,
+                        "\(lhs) \(operation.rawValue) \(rhs)"
+                    )
+                }
+            }
+        }
+    }
+
+    func testDecimalOperandMatrix() {
+        let operands = ["0.1", "1.25", "-2.5", "99.999"]
+        let operations: [(DialPad, (Decimal, Decimal) -> Decimal)] = [
+            (.plus, +),
+            (.substract, -),
+            (.multiply, *),
+            (.divide, /)
+        ]
+
+        for lhs in operands {
+            for rhs in operands {
+                for (operation, calculate) in operations {
+                    viewModel = MainViewModel()
+                    tapSignedNumber(lhs)
+                    tap(operation)
+                    tapSignedNumber(rhs)
+                    tap(.equal)
+
+                    let expected = calculate(
+                        Decimal(string: lhs)!,
+                        Decimal(string: rhs)!
+                    ).clean(places: 6)
+                    XCTAssertEqual(
+                        viewModel.result,
+                        expected,
+                        "\(lhs) \(operation.rawValue) \(rhs)"
+                    )
+                }
+            }
+        }
     }
     
     // MARK: - 综合测试报告
