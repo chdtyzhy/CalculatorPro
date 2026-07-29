@@ -1,69 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
-    <device id="retina6_72" orientation="portrait" appearance="light"/>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21701" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+    <device id="retina6_12" orientation="portrait" appearance="dark"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21678"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
         <scene sceneID="EHf-IW-A2E">
             <objects>
                 <viewController id="01J-lp-oVM" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3" userLabel="LaunchScreen View">
+                    <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3" userLabel="Launch Screen">
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <!-- Background -->
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bgView">
-                                <rect key="frame" x="0" y="0" width="393" height="852"/>
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
-                            </view>
-                            <!-- Calculator Display Area -->
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="displayArea">
-                                <rect key="frame" x="20" y="200" width="353" height="80"/>
-                                <color key="backgroundColor" red="0.137" green="0.137" blue="0.157" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="0" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="displayLabel">
-                                        <rect key="frame" x="20" y="10" width="313" height="60"/>
-                                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="64"/>
-                                        <color key="textColor" red="1.0" green="0.624" blue="0.039" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
-                                    </label>
-                                </subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="=" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="markLabel">
+                                <rect key="frame" x="176.5" y="375" width="40" height="48"/>
                                 <constraints>
-                                    <constraint firstItem="displayLabel" firstAttribute="leading" secondItem="displayArea" secondAttribute="leading" constant="20" id="dl1"/>
-                                    <constraint firstAttribute="trailing" secondItem="displayLabel" secondAttribute="trailing" constant="20" id="dl2"/>
-                                    <constraint firstItem="displayLabel" firstAttribute="centerY" secondItem="displayArea" secondAttribute="centerY" id="dl3"/>
+                                    <constraint firstAttribute="width" constant="40" id="markWidth"/>
+                                    <constraint firstAttribute="height" constant="48" id="markHeight"/>
                                 </constraints>
-                            </view>
-                            <!-- App Title -->
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="芃芃计算器" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel">
-                                <rect key="frame" x="40" y="420" width="313" height="40"/>
-                                <fontDescription key="fontDescription" type="system" weight="thin" pointSize="32"/>
-                                <color key="textColor" red="0.392" green="0.392" blue="0.412" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="40"/>
+                                <color key="textColor" red="1" green="0.6235294118" blue="0.03921568627" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             </label>
-                            <!-- Loading indicator -->
-                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="spinner">
-                                <rect key="frame" x="186.5" y="500" width="20" height="20"/>
-                                <color key="color" red="1.0" green="0.624" blue="0.039" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
-                            </activityIndicatorView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="芃芃计算器" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" translatesAutoresizingMaskIntoConstraints="NO" id="titleLabel">
+                                <rect key="frame" x="116.5" y="435" width="160" height="29"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="160" id="titleWidth"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" weight="medium" pointSize="24"/>
+                                <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                            </label>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1.0" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
-                            <constraint firstItem="bgView" firstAttribute="top" secondItem="Ze5-6b-2t3" secondAttribute="top" id="bg1"/>
-                            <constraint firstItem="bgView" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" id="bg2"/>
-                            <constraint firstItem="bgView" firstAttribute="trailing" secondItem="Ze5-6b-2t3" secondAttribute="trailing" id="bg3"/>
-                            <constraint firstItem="bgView" firstAttribute="bottom" secondItem="Ze5-6b-2t3" secondAttribute="bottom" id="bg4"/>
-                            <constraint firstItem="displayArea" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="dax"/>
-                            <constraint firstItem="displayArea" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="120" id="dat"/>
-                            <constraint firstItem="displayArea" firstAttribute="width" secondItem="Ze5-6b-2t3" secondAttribute="width" multiplier="0.9" id="daw"/>
-                            <constraint firstItem="displayArea" firstAttribute="height" secondItem="Ze5-6b-2t3" secondAttribute="height" multiplier="0.1" id="dah"/>
-                            <constraint firstItem="titleLabel" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="tcx"/>
-                            <constraint firstItem="titleLabel" firstAttribute="top" secondItem="displayArea" secondAttribute="bottom" constant="60" id="tct"/>
-                            <constraint firstItem="spinner" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="scx"/>
-                            <constraint firstItem="spinner" firstAttribute="top" secondItem="titleLabel" secondAttribute="bottom" constant="40" id="sct"/>
+                            <constraint firstItem="markLabel" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="markCenterX"/>
+                            <constraint firstItem="markLabel" firstAttribute="centerY" secondItem="Ze5-6b-2t3" secondAttribute="centerY" constant="-27" id="markCenterY"/>
+                            <constraint firstItem="titleLabel" firstAttribute="centerX" secondItem="Ze5-6b-2t3" secondAttribute="centerX" id="titleCenterX"/>
+                            <constraint firstItem="titleLabel" firstAttribute="top" secondItem="markLabel" secondAttribute="bottom" constant="12" id="titleTop"/>
                         </constraints>
                     </view>
                 </viewController>

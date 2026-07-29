@@ -8,19 +8,11 @@ struct DisplayView: View {
     let colorScheme: ColorScheme
     let duration: TimeInterval
     
-    // 格式化显示内容（将运算符符号替换为显示符号）
-    private var displayText: String {
-        return mainViewModel.result
-            .replacingOccurrences(of: "/", with: "÷")
-            .replacingOccurrences(of: "*", with: "×")
-            .replacingOccurrences(of: "-", with: "−")
-    }
-    
     var body: some View {
         VStack(alignment: .trailing, spacing: 4) {
-            // 表达式显示区域（如 "89×6"，小字体灰色）
-            if !mainViewModel.currentExpression.isEmpty {
-                Text(mainViewModel.currentExpression)
+            // 计算完成后，原生计算器会将完整算式缩到结果上方。
+            if !mainViewModel.secondaryDisplayText.isEmpty {
+                Text(mainViewModel.secondaryDisplayText)
                     .foregroundColor(Color(white: 0.5))
                     .font(.system(size: 28, weight: .regular))
                     .lineLimit(1)
@@ -29,21 +21,12 @@ struct DisplayView: View {
             
             Spacer(minLength: 0)
             
-            // 结果显示区域（大字体白色）
-            ZStack(alignment: .bottomTrailing) {
-                // 默认显示0
-                Text("0")
-                    .foregroundColor(.white)
-                    .font(.system(size: 70, weight: .light))
-                    .opacity(self.mainViewModel.result.isEmpty ? 0.6 : 0)
-                
-                // 当前输入或计算结果
-                Text(displayText)
-                    .foregroundColor(.white)
-                    .font(.system(size: 70, weight: .light))
-                    .minimumScaleFactor(0.5)
-                    .lineLimit(1)
-            }
+            // 输入过程中显示完整算式；计算完成后显示结果。
+            Text(mainViewModel.primaryDisplayText)
+                .foregroundColor(.white)
+                .font(.system(size: 70, weight: .light))
+                .minimumScaleFactor(0.5)
+                .lineLimit(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
         .padding(.horizontal, 16)

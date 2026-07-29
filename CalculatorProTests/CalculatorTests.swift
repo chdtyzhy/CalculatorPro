@@ -431,27 +431,20 @@ class CalculatorTests: XCTestCase {
         XCTAssertEqual(viewModel.currentExpression, "8×7", "输入 8 × 7 应该显示 8×7")
     }
 
-    func testOperatorKeepsCurrentDisplayUntilNextOperandInput() {
-        let cases: [(DialPad, String)] = [
-            (.plus, "9+"),
-            (.substract, "9−"),
-            (.multiply, "9×"),
-            (.divide, "9÷")
-        ]
+    func testActiveExpressionUsesPrimaryDisplayUntilCalculationCompletes() {
+        tapNumber("9")
+        tap(.multiply)
 
-        for (operation, expression) in cases {
-            viewModel = MainViewModel()
-            tapNumber("9")
-            tap(operation)
+        XCTAssertEqual(viewModel.primaryDisplayText, "9×")
+        XCTAssertEqual(viewModel.secondaryDisplayText, "")
 
-            XCTAssertEqual(viewModel.result, "9")
-            XCTAssertEqual(viewModel.currentExpression, expression)
-            XCTAssertTrue(viewModel.resultReady)
+        tapNumber("2")
+        XCTAssertEqual(viewModel.primaryDisplayText, "9×2")
+        XCTAssertEqual(viewModel.secondaryDisplayText, "")
 
-            tapNumber("2")
-            XCTAssertEqual(viewModel.result, "2")
-            XCTAssertEqual(viewModel.currentExpression, expression + "2")
-        }
+        tap(.equal)
+        XCTAssertEqual(viewModel.primaryDisplayText, "18")
+        XCTAssertEqual(viewModel.secondaryDisplayText, "9×2")
     }
     
     // MARK: - 连续运算边界测试

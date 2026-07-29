@@ -8,6 +8,16 @@ class MainViewModel: ObservableObject {
     @Published var currentExpression: String = ""
     @Published var resultReady: Bool = false
 
+    var primaryDisplayText: String {
+        let text = currentExpression.isEmpty ? result : currentExpression
+        return formatForDisplay(text.isEmpty ? "0" : text)
+    }
+
+    var secondaryDisplayText: String {
+        guard currentExpression.isEmpty else { return "" }
+        return formatForDisplay(previousResult)
+    }
+
     // 内部状态管理
     private var state = CalculatorState()
 
@@ -87,5 +97,12 @@ class MainViewModel: ObservableObject {
             self.resultReady = ready
             self.state.isReadyForInput = ready
         }
+    }
+
+    private func formatForDisplay(_ text: String) -> String {
+        text
+            .replacingOccurrences(of: "/", with: "÷")
+            .replacingOccurrences(of: "*", with: "×")
+            .replacingOccurrences(of: "-", with: "−")
     }
 }
