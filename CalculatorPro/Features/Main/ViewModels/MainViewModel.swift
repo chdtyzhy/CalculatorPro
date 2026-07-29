@@ -1,5 +1,35 @@
 import SwiftUI
 
+struct CalculationHistoryEntry: Codable, Identifiable, Equatable {
+    static let presetCategories = ["房租", "餐饮", "购物", "交通", "水电", "工资"]
+
+    let id: UUID
+    let expression: String
+    let result: String
+    let createdAt: Date
+    var category: String?
+
+    init(
+        id: UUID,
+        expression: String,
+        result: String,
+        createdAt: Date,
+        category: String? = nil
+    ) {
+        self.id = id
+        self.expression = expression
+        self.result = result
+        self.createdAt = createdAt
+        self.category = category
+    }
+
+    var copyText: String {
+        let calculation = "\(expression) = \(result)"
+        guard let category, !category.isEmpty else { return calculation }
+        return "[\(category)] \(calculation)"
+    }
+}
+
 // 计算器主视图模型
 // 使用状态机和处理器模式重构，逻辑更清晰
 class MainViewModel: ObservableObject {
@@ -7,6 +37,7 @@ class MainViewModel: ObservableObject {
     @Published var previousResult: String = ""
     @Published var currentExpression: String = ""
     @Published var resultReady: Bool = false
+    @Published private(set) var history: [CalculationHistoryEntry] = []
 
     var primaryDisplayText: String {
         let text = currentExpression.isEmpty ? result : currentExpression
@@ -20,6 +51,18 @@ class MainViewModel: ObservableObject {
 
     // 内部状态管理
     private var state = CalculatorState()
+    private let userDefaults: UserDefaults
+    private let historyKey: String
+    private let maximumHistoryCount = 100
+
+    init(
+        userDefaults: UserDefaults = .standard,
+        historyKey: String = "calculationHistory"
+    ) {
+        self.userDefaults = userDefaults
+        self.historyKey = historyKey
+        loadHistory()
+    }
 
     // MARK: - 公共接口
 
@@ -29,6 +72,14 @@ class MainViewModel: ObservableObject {
 
         // 同步到 Published 属性
         syncToPublished(update: update)
+
+        if (pad == .equal || pad == .percentage),
+           let expression = update?.previousResult,
+           !expression.isEmpty,
+           let display = update?.display,
+           !display.isEmpty {
+            addHistory(expression: expression, result: display)
+        }
     }
 
     func set(operation: Operation) {
@@ -49,6 +100,35 @@ class MainViewModel: ObservableObject {
         let handler = ClearHandler()
         let update = handler.handle(state: &state)
         syncToPublished(update: update)
+    }
+
+    func reuse(_ entry: CalculationHistoryEntry) {
+        state.prepareForNewCalculation()
+        state.display = entry.result
+        state.accumulator = Decimal(string: entry.result) ?? 0
+        state.isReadyForInput = true
+        result = entry.result
+        previousResult = entry.expression
+        currentExpression = ""
+        resultReady = true
+    }
+
+    func deleteHistory(at offsets: IndexSet) {
+        history.remove(atOffsets: offsets)
+        saveHistory()
+    }
+
+    func clearHistory() {
+        history.removeAll()
+        saveHistory()
+    }
+
+    func updateCategory(for entryID: UUID, category: String) {
+        guard let index = history.firstIndex(where: { $0.id == entryID }) else { return }
+
+        let trimmed = category.trimmingCharacters(in: .whitespacesAndNewlines)
+        history[index].category = trimmed.isEmpty ? nil : String(trimmed.prefix(20))
+        saveHistory()
     }
 
     // MARK: - 私有方法
@@ -104,5 +184,35 @@ class MainViewModel: ObservableObject {
             .replacingOccurrences(of: "/", with: "÷")
             .replacingOccurrences(of: "*", with: "×")
             .replacingOccurrences(of: "-", with: "−")
+    }
+
+    private func addHistory(expression: String, result: String) {
+        let entry = CalculationHistoryEntry(
+            id: UUID(),
+            expression: formatForDisplay(expression),
+            result: formatForDisplay(result),
+            createdAt: Date()
+        )
+        history.insert(entry, at: 0)
+        if history.count > maximumHistoryCount {
+            history.removeLast(history.count - maximumHistoryCount)
+        }
+        saveHistory()
+    }
+
+    private func loadHistory() {
+        guard let data = userDefaults.data(forKey: historyKey),
+              let entries = try? JSONDecoder().decode([CalculationHistoryEntry].self, from: data) else {
+            return
+        }
+        history = entries
+    }
+
+    private func saveHistory() {
+        if history.isEmpty {
+            userDefaults.removeObject(forKey: historyKey)
+        } else if let data = try? JSONEncoder().encode(history) {
+            userDefaults.set(data, forKey: historyKey)
+        }
     }
 }

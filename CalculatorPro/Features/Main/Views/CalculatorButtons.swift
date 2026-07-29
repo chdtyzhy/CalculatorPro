@@ -10,9 +10,21 @@ struct CalculatorButtons: View {
             // 计算每个按钮的宽度（4列布局，按屏幕宽度计算保持最大尺寸）
             let buttonWidth = (geometry.size.width - stackSpacing * 3) / 4
             
-            VStack(alignment: .leading, spacing: stackSpacing) {
+            if #available(iOS 26.0, *) {
+                GlassEffectContainer(spacing: stackSpacing) {
+                    keypad(buttonWidth: buttonWidth)
+                }
+            } else {
+                keypad(buttonWidth: buttonWidth)
+            }
+        }
+        .environmentObject(appModel)
+    }
+
+    private func keypad(buttonWidth: CGFloat) -> some View {
+        VStack(alignment: .leading, spacing: stackSpacing) {
                 // 第一行：删除、清空、百分号、除号
-                HStack(spacing: stackSpacing) {
+            HStack(spacing: stackSpacing) {
                     CalculatorPad(dialPad: .revert)
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .clear)
@@ -21,10 +33,10 @@ struct CalculatorButtons: View {
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .divide)
                         .frame(width: buttonWidth, height: buttonWidth)
-                }
+            }
                 
                 // 第二行：7、8、9、乘号
-                HStack(spacing: stackSpacing) {
+            HStack(spacing: stackSpacing) {
                     CalculatorPad(dialPad: .seven)
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .eight)
@@ -33,10 +45,10 @@ struct CalculatorButtons: View {
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .multiply)
                         .frame(width: buttonWidth, height: buttonWidth)
-                }
+            }
                 
                 // 第三行：4、5、6、减号
-                HStack(spacing: stackSpacing) {
+            HStack(spacing: stackSpacing) {
                     CalculatorPad(dialPad: .four)
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .five)
@@ -45,10 +57,10 @@ struct CalculatorButtons: View {
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .substract)
                         .frame(width: buttonWidth, height: buttonWidth)
-                }
+            }
                 
                 // 第四行：1、2、3、加号
-                HStack(spacing: stackSpacing) {
+            HStack(spacing: stackSpacing) {
                     CalculatorPad(dialPad: .one)
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .two)
@@ -57,10 +69,10 @@ struct CalculatorButtons: View {
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .plus)
                         .frame(width: buttonWidth, height: buttonWidth)
-                }
+            }
                 
                 // 第五行：正负号、0、小数点、等号（与系统计算器一致）
-                HStack(spacing: stackSpacing) {
+            HStack(spacing: stackSpacing) {
                     CalculatorPad(dialPad: .plusMinus)
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .zero)
@@ -69,10 +81,8 @@ struct CalculatorButtons: View {
                         .frame(width: buttonWidth, height: buttonWidth)
                     CalculatorPad(dialPad: .equal)
                         .frame(width: buttonWidth, height: buttonWidth)
-                }
             }
         }
-        .environmentObject(appModel)
     }
 }
 

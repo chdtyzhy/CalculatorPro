@@ -3,29 +3,19 @@ import SwiftUI
 // 单个计算器按钮
 struct CalculatorPad: View {
     @EnvironmentObject var appModel: MainViewModel
-    @Environment(\.colorScheme) var colorScheme: ColorScheme
-    
-    // 按钮点击动画缩放比例
-    @State var scale: CGFloat = 1
-    @State var foregroundColor = Color.white
-    
-    let animationDuration: TimeInterval = 0.15
-    
     var dialPad: DialPad
-    var color: Color = .label
     
     // 按钮背景颜色（根据类型区分）
     private var buttonBackgroundColor: Color {
         switch dialPad {
         case .clear, .plusMinus, .percentage, .revert:
-            // 功能按钮：浅灰色
-            return Color(white: 0.65)
-        case .divide, .multiply, .substract, .plus, .equal:
-            // 运算符：橙色
-            return Color.orange
+            return .functionKey
+        case .divide, .multiply, .substract, .plus:
+            return .operationKey
+        case .equal:
+            return .equalKey
         default:
-            // 数字按钮：深灰色
-            return Color(white: 0.22)
+            return .numberKey
         }
     }
     
@@ -33,11 +23,11 @@ struct CalculatorPad: View {
     private var buttonForegroundColor: Color {
         switch dialPad {
         case .clear, .plusMinus, .percentage, .revert:
-            // 功能按钮：黑色文字
-            return Color.black
-        default:
-            // 其他：白色文字
+            return .primaryInk
+        case .divide, .multiply, .substract, .plus, .equal:
             return Color.white
+        default:
+            return .primaryInk
         }
     }
     
@@ -60,31 +50,36 @@ struct CalculatorPad: View {
     }
     
     var body: some View {
-        Circle()
-            .foregroundColor(buttonBackgroundColor)
-            .overlay(
-                Text(displayText)
-                    .font(.system(size: 34, weight: .regular, design: .default))
-                    .foregroundColor(buttonForegroundColor)
+        Button {
+            appModel.performAction(for: dialPad)
+        } label: {
+            Text(displayText)
+                .font(.system(size: 30, weight: .semibold, design: .rounded))
+                .foregroundColor(buttonForegroundColor)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
+                .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+        }
+        .buttonStyle(.plain)
+        .calculatorKeySurface(color: buttonBackgroundColor)
+        .accessibilityLabel(displayText)
+    }
+}
+
+private extension View {
+    @ViewBuilder
+    func calculatorKeySurface(color: Color) -> some View {
+        if #available(iOS 26.0, *) {
+            glassEffect(
+                .regular.tint(color).interactive(),
+                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
             )
-            .aspectRatio(1, contentMode: .fit)
-            .scaleEffect(scale)
-            .onTapGesture {
-                // 执行对应操作
-                self.appModel.performAction(for: dialPad)
-                
-                // 点击动画效果
-                withAnimation(.easeInOut(duration: animationDuration)) {
-                    scale = 0.95
-                }
-                
-                // 恢复原始大小
-                Timer.scheduledTimer(withTimeInterval: animationDuration, repeats: false) { _ in
-                    withAnimation(.default) {
-                        scale = 1
-                    }
-                }
-            }
+        } else {
+            background(
+                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                    .fill(color)
+                    .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
+            )
+        }
     }
 }
 

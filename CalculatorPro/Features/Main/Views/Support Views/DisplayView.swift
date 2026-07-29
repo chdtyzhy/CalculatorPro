@@ -13,8 +13,8 @@ struct DisplayView: View {
             // 计算完成后，原生计算器会将完整算式缩到结果上方。
             if !mainViewModel.secondaryDisplayText.isEmpty {
                 Text(mainViewModel.secondaryDisplayText)
-                    .foregroundColor(Color(white: 0.5))
-                    .font(.system(size: 28, weight: .regular))
+                    .foregroundColor(.white.opacity(0.58))
+                    .font(.system(size: 22, weight: .regular, design: .rounded))
                     .lineLimit(1)
                     .minimumScaleFactor(0.6)
             }
@@ -24,12 +24,16 @@ struct DisplayView: View {
             // 输入过程中显示完整算式；计算完成后显示结果。
             Text(mainViewModel.primaryDisplayText)
                 .foregroundColor(.white)
-                .font(.system(size: 70, weight: .light))
+                .font(.system(size: 58, weight: .medium, design: .rounded))
                 .minimumScaleFactor(0.5)
                 .lineLimit(1)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottomTrailing)
-        .padding(.horizontal, 16)
+        .padding(20)
+        .background(
+            RoundedRectangle(cornerRadius: 8, style: .continuous)
+                .fill(Color.displayBackground)
+        )
     }
 }
 

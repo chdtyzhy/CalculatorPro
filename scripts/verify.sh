@@ -4,6 +4,7 @@ set -euo pipefail
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PROJECT_FILE="$ROOT_DIR/CalculatorPro.xcodeproj/project.pbxproj"
 INFO_PLIST="$ROOT_DIR/CalculatorPro/Resources/Info.plist"
+PRIVACY_MANIFEST="$ROOT_DIR/CalculatorPro/Resources/PrivacyInfo.xcprivacy"
 XCODE_DEVELOPER_DIR="${XCODE_DEVELOPER_DIR:-/Applications/Xcode.app/Contents/Developer}"
 export DEVELOPER_DIR="$XCODE_DEVELOPER_DIR"
 
@@ -11,6 +12,15 @@ cd "$ROOT_DIR"
 
 git diff --check
 plutil -lint "$INFO_PLIST"
+plutil -lint "$PRIVACY_MANIFEST"
+
+privacy_api_type="$(/usr/libexec/PlistBuddy -c 'Print :NSPrivacyAccessedAPITypes:0:NSPrivacyAccessedAPIType' "$PRIVACY_MANIFEST")"
+privacy_api_reason="$(/usr/libexec/PlistBuddy -c 'Print :NSPrivacyAccessedAPITypes:0:NSPrivacyAccessedAPITypeReasons:0' "$PRIVACY_MANIFEST")"
+if [[ "$privacy_api_type" != "NSPrivacyAccessedAPICategoryUserDefaults" ]] ||
+  [[ "$privacy_api_reason" != "CA92.1" ]]; then
+  echo "Privacy manifest must declare UserDefaults reason CA92.1." >&2
+  exit 1
+fi
 
 mapfile_versions() {
   sed -n 's/^[[:space:]]*MARKETING_VERSION = \([^;]*\);/\1/p' "$PROJECT_FILE" | sort -u

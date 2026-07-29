@@ -24,6 +24,7 @@
 		AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */; };
 		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
 		AA0001110000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0003010000000000000001 /* Assets.xcassets */; };
+		AA0001120000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA0002110000000000000001 /* PrivacyInfo.xcprivacy */; };
 		AA1001010000000000000001 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1002010000000000000001 /* CalculatorTests.swift */; };
 /* End PBXBuildFile section */
 
@@ -55,6 +56,7 @@
 		AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fonts/EurostileExtendedBlack.ttf; sourceTree = "<group>"; };
 		AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/Bungee/BungeeLayers-Regular.otf"; sourceTree = "<group>"; };
 		AA0002100000000000000001 /* ButtonHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHandlers.swift; sourceTree = "<group>"; };
+		AA0002110000000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AA0003010000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA1000000000000000000001 /* CalculatorProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalculatorProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA1002010000000000000001 /* CalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTests.swift; sourceTree = "<group>"; };
@@ -128,6 +130,7 @@
 		AA0004030000000000000001 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				AA0002110000000000000001 /* PrivacyInfo.xcprivacy */,
 				AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */,
 				AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */,
 			);
@@ -310,6 +313,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AA0001120000000000000001 /* PrivacyInfo.xcprivacy in Resources */,
 				AA00010E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf in Resources */,
 				AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */,
 				AA0001110000000000000001 /* Assets.xcassets in Resources */,
@@ -418,7 +422,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -476,7 +480,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -500,7 +504,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CalculatorPro/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -532,7 +536,7 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
 				INFOPLIST_FILE = CalculatorPro/Resources/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -557,7 +561,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -578,7 +582,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

@@ -11,6 +11,7 @@ not maintain conflicting copies.
 | Marketing version | `MARKETING_VERSION` in the app target build settings | Must use three numeric components. |
 | Build number | `CURRENT_PROJECT_VERSION` in the app target build settings | Must be a positive integer. |
 | Bundle marketing version | `CalculatorPro/Resources/Info.plist` | Must reference `$(MARKETING_VERSION)`. |
+| App Store metadata and review notes | `APP_STORE_METADATA.md` | Must describe only functionality available in the submitted build. |
 | UI conventions | `UI设计规范.md` plus established SwiftUI components | Update the document when a durable visual rule changes. |
 | Public privacy page | `docs/privacy-policy.html` | Published through GitHub Pages. |
 | Public support page | `docs/support.html` | Published through GitHub Pages. |

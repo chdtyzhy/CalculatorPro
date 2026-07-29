@@ -7,15 +7,25 @@ import XCTest
 class CalculatorTests: XCTestCase {
     
     var viewModel: MainViewModel!
+    private let testDefaultsName = "CalculatorProTests.History"
+    private var testDefaults: UserDefaults!
     
     override func setUp() {
         super.setUp()
-        viewModel = MainViewModel()
+        testDefaults = UserDefaults(suiteName: testDefaultsName)!
+        testDefaults.removePersistentDomain(forName: testDefaultsName)
+        viewModel = makeViewModel()
     }
     
     override func tearDown() {
         viewModel = nil
+        testDefaults.removePersistentDomain(forName: testDefaultsName)
+        testDefaults = nil
         super.tearDown()
+    }
+
+    func makeViewModel() -> MainViewModel {
+        MainViewModel(userDefaults: testDefaults)
     }
     
     // MARK: - 辅助方法：模拟按钮点击
@@ -198,7 +208,7 @@ class CalculatorTests: XCTestCase {
         ]
 
         for (operation, expected) in cases {
-            viewModel = MainViewModel()
+            viewModel = makeViewModel()
             tapNumber("200")
             tap(operation)
             tapNumber("10")
@@ -446,6 +456,90 @@ class CalculatorTests: XCTestCase {
         XCTAssertEqual(viewModel.primaryDisplayText, "18")
         XCTAssertEqual(viewModel.secondaryDisplayText, "9×2")
     }
+
+    func testContinuousOperationKeepsFullExpression() {
+        tapNumber("5")
+        tap(.plus)
+        tapNumber("3")
+        tap(.multiply)
+        tapNumber("2")
+
+        XCTAssertEqual(viewModel.currentExpression, "5+3×2")
+
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "16")
+        XCTAssertEqual(viewModel.previousResult, "5+3×2")
+    }
+
+    func testCompletedCalculationIsPersistedAndReloaded() {
+        tapNumber("12")
+        tap(.plus)
+        tapNumber("8")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.history.count, 1)
+        XCTAssertEqual(viewModel.history.first?.expression, "12+8")
+        XCTAssertEqual(viewModel.history.first?.result, "20")
+        XCTAssertEqual(viewModel.history.first?.copyText, "12+8 = 20")
+
+        let reloadedViewModel = makeViewModel()
+        XCTAssertEqual(reloadedViewModel.history, viewModel.history)
+    }
+
+    func testReuseHistoryEntryUsesResultAsNextOperand() {
+        tapNumber("7")
+        tap(.multiply)
+        tapNumber("6")
+        tap(.equal)
+
+        let entry = viewModel.history[0]
+        viewModel.reset()
+        viewModel.reuse(entry)
+        tap(.plus)
+        tapNumber("8")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "50")
+        XCTAssertEqual(viewModel.previousResult, "42+8")
+    }
+
+    func testHistoryCanBeDeletedAndCleared() {
+        tapNumber("1")
+        tap(.plus)
+        tapNumber("1")
+        tap(.equal)
+        tapNumber("3")
+        tap(.percentage)
+
+        XCTAssertEqual(viewModel.history.count, 2)
+        viewModel.deleteHistory(at: IndexSet(integer: 0))
+        XCTAssertEqual(viewModel.history.count, 1)
+
+        viewModel.clearHistory()
+        XCTAssertTrue(viewModel.history.isEmpty)
+        XCTAssertTrue(makeViewModel().history.isEmpty)
+    }
+
+    func testHistoryCategoryIsEditablePersistentAndIncludedWhenCopied() {
+        XCTAssertEqual(
+            CalculationHistoryEntry.presetCategories,
+            ["房租", "餐饮", "购物", "交通", "水电", "工资"]
+        )
+
+        tapNumber("3500")
+        tap(.plus)
+        tapNumber("0")
+        tap(.equal)
+        let entryID = viewModel.history[0].id
+
+        viewModel.updateCategory(for: entryID, category: "  本月房租  ")
+        XCTAssertEqual(viewModel.history[0].category, "本月房租")
+        XCTAssertEqual(viewModel.history[0].copyText, "[本月房租] 3500+0 = 3500")
+        XCTAssertEqual(makeViewModel().history[0].category, "本月房租")
+
+        viewModel.updateCategory(for: entryID, category: "   ")
+        XCTAssertNil(viewModel.history[0].category)
+    }
     
     // MARK: - 连续运算边界测试
     func testContinuousOperations() {
@@ -483,7 +577,7 @@ class CalculatorTests: XCTestCase {
         ]
 
         for (operation, expected) in cases {
-            viewModel = MainViewModel()
+            viewModel = makeViewModel()
             tapNumber("5")
             tap(operation)
             tap(.equal)
@@ -556,7 +650,7 @@ class CalculatorTests: XCTestCase {
         tapNumber("1234567890")
         XCTAssertEqual(viewModel.result, "-1234567890")
 
-        viewModel = MainViewModel()
+        viewModel = makeViewModel()
         tapNumber("1.234567890")
         XCTAssertEqual(viewModel.result, "1.234567890")
     }
@@ -611,7 +705,7 @@ class CalculatorTests: XCTestCase {
         ]
 
         for (operation, lhs, rhs, firstResult, repeatedResult) in cases {
-            viewModel = MainViewModel()
+            viewModel = makeViewModel()
             tapNumber(lhs)
             tap(operation)
             tapNumber(rhs)
@@ -634,7 +728,7 @@ class CalculatorTests: XCTestCase {
         tap(.equal)
         XCTAssertEqual(viewModel.result, "4")
 
-        viewModel = MainViewModel()
+        viewModel = makeViewModel()
         tapNumber("2")
         tap(.plus)
         tapNumber("3")
@@ -663,7 +757,7 @@ class CalculatorTests: XCTestCase {
         XCTAssertEqual(viewModel.result, "-1234567890")
         XCTAssertEqual(viewModel.currentExpression, "1+-1234567890")
 
-        viewModel = MainViewModel()
+        viewModel = makeViewModel()
         tapNumber("1")
         tap(.plus)
         tapNumber("1.2345678901")
@@ -679,7 +773,7 @@ class CalculatorTests: XCTestCase {
         XCTAssertEqual(viewModel.result, "12.")
         XCTAssertEqual(viewModel.currentExpression, "5+12.")
 
-        viewModel = MainViewModel()
+        viewModel = makeViewModel()
         tapNumber("5")
         tap(.plus)
         tap(.plusMinus)
@@ -706,7 +800,7 @@ class CalculatorTests: XCTestCase {
                 for (operation, calculate) in operations {
                     if operation == .divide && rhs == 0 { continue }
 
-                    viewModel = MainViewModel()
+                    viewModel = makeViewModel()
                     tapSignedNumber(String(lhs))
                     tap(operation)
                     tapSignedNumber(String(rhs))
@@ -735,7 +829,7 @@ class CalculatorTests: XCTestCase {
         for lhs in operands {
             for rhs in operands {
                 for (operation, calculate) in operations {
-                    viewModel = MainViewModel()
+                    viewModel = makeViewModel()
                     tapSignedNumber(lhs)
                     tap(operation)
                     tapSignedNumber(rhs)

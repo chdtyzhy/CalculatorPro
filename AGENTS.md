@@ -5,7 +5,7 @@
 - 产品：CalculatorPro，一款完全离线运行的 iPhone 计算器。
 - 语言与框架：Swift 5 / SwiftUI。
 - 架构：MVVM 风格，计算状态、输入处理器和界面分层管理。
-- 最低支持版本：iOS 15.0。
+- 最低支持版本：iOS 16.0。
 - Xcode 工程入口：`CalculatorPro.xcodeproj`。
 - App Target 与 Scheme：`CalculatorPro`。
 - 第三方依赖：无。

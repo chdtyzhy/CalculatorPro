@@ -207,8 +207,12 @@ struct OperatorHandler: ButtonHandler {
             state.accumulator = currentValue
         }
 
-        // 构建表达式
-        state.expression = state.display + opSymbol
+        // 保留用户输入的完整算式；内部仍按从左到右的顺序计算。
+        if state.expression.isEmpty {
+            state.expression = state.display + opSymbol
+        } else {
+            state.expression += opSymbol
+        }
 
         state.pendingOp = operation
         state.prepareForOperandInput()
