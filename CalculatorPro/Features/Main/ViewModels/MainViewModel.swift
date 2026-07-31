@@ -36,7 +36,6 @@ class MainViewModel: ObservableObject {
     @Published var result: String = "0"
     @Published var previousResult: String = ""
     @Published var currentExpression: String = ""
-    @Published var resultReady: Bool = false
     @Published private(set) var history: [CalculationHistoryEntry] = []
 
     var primaryDisplayText: String {
@@ -105,12 +104,15 @@ class MainViewModel: ObservableObject {
     func reuse(_ entry: CalculationHistoryEntry) {
         state.prepareForNewCalculation()
         state.display = entry.result
-        state.accumulator = Decimal(string: entry.result) ?? 0
+        let normalizedResult = entry.result
+            .replacingOccurrences(of: "−", with: "-")
+            .replacingOccurrences(of: "×", with: "*")
+            .replacingOccurrences(of: "÷", with: "/")
+        state.accumulator = Decimal(string: normalizedResult) ?? 0
         state.isReadyForInput = true
         result = entry.result
         previousResult = entry.expression
         currentExpression = ""
-        resultReady = true
     }
 
     func deleteHistory(at offsets: IndexSet) {
@@ -174,7 +176,6 @@ class MainViewModel: ObservableObject {
             self.state.previousResult = prevResult
         }
         if let ready = update.isReadyForInput {
-            self.resultReady = ready
             self.state.isReadyForInput = ready
         }
     }
@@ -190,7 +191,7 @@ class MainViewModel: ObservableObject {
         let entry = CalculationHistoryEntry(
             id: UUID(),
             expression: formatForDisplay(expression),
-            result: formatForDisplay(result),
+            result: result,
             createdAt: Date()
         )
         history.insert(entry, at: 0)

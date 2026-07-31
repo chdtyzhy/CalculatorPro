@@ -40,6 +40,7 @@ struct DigitHandler: ButtonHandler {
         guard digitCount < state.maxDigits else { return nil }
 
         let wasEmpty = state.display.isEmpty
+        let oldDisplay = state.display
 
         // 处理各种输入情况
         if state.display == "0" && digit != "0" {
@@ -56,26 +57,21 @@ struct DigitHandler: ButtonHandler {
 
         // 更新表达式
         if !state.expression.isEmpty {
-            if wasEmpty || state.display == digit {
+            if wasEmpty {
                 // 新操作数的第一个数字，追加完整显示值
-                state.expression += state.display
-            } else if state.display.hasPrefix("-") {
-                // 负数情况（从 -0 变成 -数字），替换表达式中的 -0
-                if state.expression.hasSuffix("-0") {
-                    state.expression.removeLast(2)
-                    state.expression += state.display
-                } else {
-                    state.expression += digit
-                }
-            } else {
-                // 继续输入，只追加数字
-                state.expression += digit
+                state.expression += state.expressionOperand(for: state.display)
+            } else if !state.replaceTrailingExpressionOperand(
+                from: oldDisplay,
+                with: state.display
+            ) {
+                state.expression += state.expressionOperand(for: state.display)
             }
         }
 
         return CalculatorUpdate(
             display: state.display,
             expression: state.expression,
+            previousResult: state.previousResult,
             isReadyForInput: state.isReadyForInput
         )
     }
@@ -91,6 +87,7 @@ struct DecimalHandler: ButtonHandler {
         }
 
         let wasReady = state.isReadyForInput
+        let oldDisplay = state.display
 
         if state.isReadyForInput && state.pendingOp == .unknown {
             // 开始新计算
@@ -112,10 +109,12 @@ struct DecimalHandler: ButtonHandler {
         if !state.expression.isEmpty {
             if wasReady {
                 // 新操作数的第一个小数点，追加完整值
-                state.expression += state.display
-            } else {
-                // 继续输入，只追加小数点
-                state.expression += "."
+                state.expression += state.expressionOperand(for: state.display)
+            } else if !state.replaceTrailingExpressionOperand(
+                from: oldDisplay,
+                with: state.display
+            ) {
+                state.expression += state.expressionOperand(for: state.display)
             }
         }
 
@@ -150,18 +149,19 @@ struct PlusMinusHandler: ButtonHandler {
         }
 
         // 更新表达式
-        if !state.expression.isEmpty {
-            if wasReady {
-                // 刚输入运算符后的第一个 +/-，追加完整值
-                state.expression += state.display
-            } else if !oldDisplay.isEmpty && state.expression.hasSuffix(oldDisplay) {
-                // 替换表达式末尾的旧值
-                state.expression.removeLast(oldDisplay.count)
-                state.expression += state.display
-            }
+        if wasReady {
+            state.expression += state.expressionOperand(for: state.display)
+        } else if oldDisplay == "-0" {
+            state.replaceTrailingExpressionOperand(from: oldDisplay, with: nil)
+        } else if !state.expression.isEmpty {
+            state.replaceTrailingExpressionOperand(from: oldDisplay, with: state.display)
+        } else if state.display.hasPrefix("-") {
+            // 首个负数也进入表达式状态，确保后续运算保留括号语义。
+            state.expression = state.expressionOperand(for: state.display)
         }
 
-        state.isReadyForInput = false
+        state.isReadyForInput =
+            state.pendingOp != .unknown && oldDisplay == "-0"
 
         return CalculatorUpdate(
             display: state.display,
@@ -181,6 +181,14 @@ struct OperatorHandler: ButtonHandler {
         guard !state.isUndefined else { return nil }
 
         let opSymbol = symbol(for: operation)
+
+        // 尚未输入数字的负号只是右操作数意图；按运算符时撤销意图并替换运算符。
+        if state.pendingOp != .unknown,
+           state.display == "-0",
+           state.expression.hasSuffix(state.expressionOperand(for: state.display)) {
+            state.replaceTrailingExpressionOperand(from: state.display, with: nil)
+            state.isReadyForInput = true
+        }
 
         // 连续点击运算符时只替换待执行运算，不使用占位显示值 0 参与计算。
         if state.isReadyForInput && state.pendingOp != .unknown {
@@ -289,6 +297,7 @@ struct SubtractHandler: ButtonHandler {
 struct EqualHandler: ButtonHandler {
     func handle(state: inout CalculatorState) -> CalculatorUpdate? {
         guard !state.display.isEmpty else { return nil }
+        guard !state.isUndefined else { return nil }
 
         let isRepeatedEqual = state.pendingOp == .unknown &&
             state.isReadyForInput &&
@@ -340,11 +349,15 @@ struct EqualHandler: ButtonHandler {
             return CalculatorUpdate(display: state.display, expression: state.expression)
         }
 
-        let operandDisplay = usesAccumulatorAsOperand
+        let rawOperandDisplay = usesAccumulatorAsOperand
             ? currentValue.clean(places: 6)
             : state.display
+        let operandDisplay = state.expressionOperand(for: rawOperandDisplay)
         if isRepeatedEqual {
-            state.previousResult = state.display + symbol(for: operation) + currentValue.clean(places: 6)
+            state.previousResult =
+                state.expressionOperand(for: state.display) +
+                symbol(for: operation) +
+                state.expressionOperand(for: currentValue.clean(places: 6))
         } else {
             state.previousResult = state.expression.hasSuffix(operandDisplay)
                 ? state.expression
@@ -416,9 +429,10 @@ struct PercentageHandler: ButtonHandler {
             return CalculatorUpdate(display: state.display, expression: state.expression)
         }
 
-        let operandDisplay = state.isReadyForInput
+        let rawOperandDisplay = state.isReadyForInput
             ? currentValue.clean(places: 6)
             : state.display
+        let operandDisplay = state.expressionOperand(for: rawOperandDisplay)
         state.previousResult = state.expression.hasSuffix(operandDisplay)
             ? state.expression + "%"
             : state.expression + operandDisplay + "%"
@@ -474,13 +488,22 @@ struct RevertHandler: ButtonHandler {
         }
 
         // 用完整操作数替换表达式尾部，避免负号与显示值失去同步。
-        if !state.expression.isEmpty && state.expression.hasSuffix(oldDisplay) {
-            state.expression.removeLast(oldDisplay.count)
-            if state.display != "0" {
-                state.expression += state.display
-            }
+        if !state.expression.isEmpty {
+            let replacement = state.display == "0" ? nil : state.display
+            state.replaceTrailingExpressionOperand(from: oldDisplay, with: replacement)
         }
 
-        return CalculatorUpdate(display: state.display, expression: state.expression)
+        // 右操作数被完整退格回 "0" 占位符时,标记为等待新操作数。
+        // 这样后续按运算符会走"替换待执行运算符"分支,而不是用 "0" 参与
+        // 计算并把 "+" 直接拼到形如 "5+" 的表达式后面,产生 "5++" 这类异常算式。
+        if state.pendingOp != .unknown && state.display == "0" {
+            state.isReadyForInput = true
+        }
+
+        return CalculatorUpdate(
+            display: state.display,
+            expression: state.expression,
+            isReadyForInput: state.isReadyForInput
+        )
     }
 }

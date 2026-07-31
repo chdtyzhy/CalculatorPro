@@ -32,6 +32,28 @@ struct CalculatorState {
         Decimal(string: display) ?? 0
     }
 
+    func expressionOperand(for value: String) -> String {
+        guard value.hasPrefix("-") else { return value }
+        return value == "-0" ? "(-" : "(\(value))"
+    }
+
+    @discardableResult
+    mutating func replaceTrailingExpressionOperand(
+        from oldValue: String,
+        with newValue: String?
+    ) -> Bool {
+        let oldOperand = expressionOperand(for: oldValue)
+        guard !oldOperand.isEmpty, expression.hasSuffix(oldOperand) else {
+            return false
+        }
+
+        expression.removeLast(oldOperand.count)
+        if let newValue {
+            expression += expressionOperand(for: newValue)
+        }
+        return true
+    }
+
     // MARK: - 状态操作
 
     mutating func setUndefined() {
