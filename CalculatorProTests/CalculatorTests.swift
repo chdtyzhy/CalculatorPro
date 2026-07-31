@@ -1,3 +1,4 @@
+import Foundation
 import XCTest
 @testable import CalculatorPro
 
@@ -26,6 +27,146 @@ class CalculatorTests: XCTestCase {
 
     func makeViewModel() -> MainViewModel {
         MainViewModel(userDefaults: testDefaults)
+    }
+
+    func testAutomaticReviewRequestDoesNotOccurDuringFirstFourLaunches() {
+        let date = Date(timeIntervalSince1970: 1_000_000)
+
+        for _ in 1...4 {
+            let manager = AppReviewManager(userDefaults: testDefaults, now: { date })
+            XCTAssertFalse(manager.recordLaunchAndShouldRequestAutomaticReview())
+        }
+    }
+
+    func testAutomaticReviewRequestOccursOnFifthLaunch() {
+        let date = Date(timeIntervalSince1970: 1_000_000)
+
+        for _ in 1...4 {
+            let manager = AppReviewManager(userDefaults: testDefaults, now: { date })
+            XCTAssertFalse(manager.recordLaunchAndShouldRequestAutomaticReview())
+        }
+
+        let fifthLaunchManager = AppReviewManager(userDefaults: testDefaults, now: { date })
+        XCTAssertTrue(fifthLaunchManager.recordLaunchAndShouldRequestAutomaticReview())
+    }
+
+    func testAutomaticReviewRequestDoesNotOccurWithinThirtyDaysOfLastAutomaticRequest() {
+        let firstRequestDate = Date(timeIntervalSince1970: 1_000_000)
+        triggerFirstReviewRequest(at: firstRequestDate)
+
+        let datesWithinThirtyDays = [
+            firstRequestDate.addingTimeInterval(10 * 24 * 60 * 60),
+            firstRequestDate.addingTimeInterval(29 * 24 * 60 * 60)
+        ]
+
+        for date in datesWithinThirtyDays {
+            let manager = AppReviewManager(userDefaults: testDefaults, now: { date })
+            XCTAssertFalse(manager.recordLaunchAndShouldRequestAutomaticReview())
+        }
+    }
+
+    func testAutomaticReviewRequestOccursThirtyDaysAfterLastAutomaticRequest() {
+        let firstRequestDate = Date(timeIntervalSince1970: 1_000_000)
+        triggerFirstReviewRequest(at: firstRequestDate)
+
+        let dayBeforeEligible = firstRequestDate.addingTimeInterval(29 * 24 * 60 * 60)
+        let earlyLaunchManager = AppReviewManager(
+            userDefaults: testDefaults,
+            now: { dayBeforeEligible }
+        )
+        XCTAssertFalse(earlyLaunchManager.recordLaunchAndShouldRequestAutomaticReview())
+
+        let thirtiethDay = firstRequestDate.addingTimeInterval(30 * 24 * 60 * 60)
+        let manager = AppReviewManager(userDefaults: testDefaults, now: { thirtiethDay })
+
+        XCTAssertTrue(manager.recordLaunchAndShouldRequestAutomaticReview())
+    }
+
+    func testReviewManagerCountsOnlyOncePerAppSession() {
+        let date = Date(timeIntervalSince1970: 1_000_000)
+        let manager = AppReviewManager(userDefaults: testDefaults, now: { date })
+
+        XCTAssertFalse(manager.recordLaunchAndShouldRequestAutomaticReview())
+        XCTAssertFalse(manager.recordLaunchAndShouldRequestAutomaticReview())
+
+        for _ in 2...4 {
+            let nextLaunchManager = AppReviewManager(userDefaults: testDefaults, now: { date })
+            XCTAssertFalse(nextLaunchManager.recordLaunchAndShouldRequestAutomaticReview())
+        }
+
+        let fifthLaunchManager = AppReviewManager(userDefaults: testDefaults, now: { date })
+        XCTAssertTrue(fifthLaunchManager.recordLaunchAndShouldRequestAutomaticReview())
+    }
+
+    private func triggerFirstReviewRequest(at date: Date) {
+        for launch in 1...5 {
+            let manager = AppReviewManager(userDefaults: testDefaults, now: { date })
+            XCTAssertEqual(manager.recordLaunchAndShouldRequestAutomaticReview(), launch == 5)
+        }
+    }
+
+    func testVersionComparisonUsesThreeNumericComponents() {
+        XCTAssertEqual(AppUpdateManager.compareVersions("1.2.3", "1.2.3"), .orderedSame)
+        XCTAssertEqual(AppUpdateManager.compareVersions("1.2.4", "1.2.3"), .orderedDescending)
+        XCTAssertEqual(AppUpdateManager.compareVersions("1.2.3", "1.3.0"), .orderedAscending)
+        XCTAssertNil(AppUpdateManager.compareVersions("1.2", "1.2.0"))
+        XCTAssertNil(AppUpdateManager.compareVersions("1.a.0", "1.0.0"))
+    }
+
+    func testUpdateCheckDecodesNewerAppStoreVersion() async {
+        let storeURL = URL(string: "https://apps.apple.com/app/id123456789")!
+        let manager = makeUpdateManager(
+            currentVersion: "1.0.0",
+            responseJSON: """
+            {"results":[{"version":"1.1.0","trackViewUrl":"\(storeURL.absoluteString)"}]}
+            """
+        )
+
+        let result = await manager.checkForUpdate()
+
+        XCTAssertEqual(result, .updateAvailable(.init(version: "1.1.0", storeURL: storeURL)))
+    }
+
+    func testUpdateCheckReportsCurrentVersion() async {
+        let manager = makeUpdateManager(
+            currentVersion: "1.1.0",
+            responseJSON: """
+            {"results":[{"version":"1.1.0","trackViewUrl":"https://apps.apple.com/app/id123456789"}]}
+            """
+        )
+
+        let result = await manager.checkForUpdate()
+        XCTAssertEqual(result, .upToDate)
+    }
+
+    func testUpdateCheckHandlesNetworkFailure() async {
+        let manager = AppUpdateManager(
+            bundleIdentifier: "com.example.calculator",
+            currentVersion: "1.0.0",
+            loadData: { _ in throw URLError(.notConnectedToInternet) }
+        )
+
+        let result = await manager.checkForUpdate()
+        XCTAssertEqual(result, .unavailable)
+    }
+
+    private func makeUpdateManager(
+        currentVersion: String,
+        responseJSON: String
+    ) -> AppUpdateManager {
+        AppUpdateManager(
+            bundleIdentifier: "com.example.calculator",
+            currentVersion: currentVersion,
+            loadData: { request in
+                let response = HTTPURLResponse(
+                    url: request.url!,
+                    statusCode: 200,
+                    httpVersion: nil,
+                    headerFields: nil
+                )!
+                return (Data(responseJSON.utf8), response)
+            }
+        )
     }
     
     // MARK: - 辅助方法：模拟按钮点击
@@ -59,6 +200,19 @@ class CalculatorTests: XCTestCase {
         } else {
             tapNumber(number)
         }
+    }
+
+    func assertNewDigitStartsCleanCalculation(
+        file: StaticString = #filePath,
+        line: UInt = #line
+    ) {
+        tap(.six)
+
+        XCTAssertEqual(viewModel.result, "6", file: file, line: line)
+        XCTAssertEqual(viewModel.currentExpression, "", file: file, line: line)
+        XCTAssertEqual(viewModel.previousResult, "", file: file, line: line)
+        XCTAssertEqual(viewModel.primaryDisplayText, "6", file: file, line: line)
+        XCTAssertEqual(viewModel.secondaryDisplayText, "", file: file, line: line)
     }
     
     // MARK: - 基础运算测试
@@ -273,10 +427,126 @@ class CalculatorTests: XCTestCase {
     func testPlusMinusBeforeNumber() {
         // 测试: +/- → 9 = -9
         viewModel.set(operation: .plusMinus)
+        XCTAssertEqual(viewModel.currentExpression, "(-")
         tapNumber("9")
         
         print("【测试】+/- → 9 = \(viewModel.result)")
         XCTAssertEqual(viewModel.result, "-9", "先切换正负号再输入9应该是 -9")
+        XCTAssertEqual(viewModel.currentExpression, "(-9)")
+    }
+
+    func testPlusMinusAfterPendingOperatorShowsNegativeInputIntentWithoutZero() {
+        tapNumber("56")
+        tap(.plus)
+        tap(.plusMinus)
+
+        XCTAssertEqual(viewModel.result, "-0")
+        XCTAssertEqual(viewModel.currentExpression, "56+(-")
+        XCTAssertEqual(viewModel.primaryDisplayText, "56+(−")
+    }
+
+    func testPlusMinusAfterPendingOperatorAcceptsNumberAndEquals() {
+        tapNumber("56")
+        tap(.plus)
+        tap(.plusMinus)
+        tapNumber("2")
+
+        XCTAssertEqual(viewModel.currentExpression, "56+(-2)")
+
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "54")
+        XCTAssertEqual(viewModel.previousResult, "56+(-2)")
+    }
+
+    func testNegativeSecondOperandKeepsSequentialContinuousOperation() {
+        tapNumber("56")
+        tap(.plus)
+        tap(.plusMinus)
+        tapNumber("2")
+        tap(.multiply)
+        tapNumber("3")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "162")
+        XCTAssertEqual(viewModel.previousResult, "56+(-2)×3")
+    }
+
+    func testPlusMinusAfterPendingOperatorCanToggleBackToPositiveOperand() {
+        tapNumber("56")
+        tap(.plus)
+        tap(.plusMinus)
+        tap(.plusMinus)
+
+        XCTAssertEqual(viewModel.result, "0")
+        XCTAssertEqual(viewModel.currentExpression, "56+")
+
+        tapNumber("2")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "58")
+        XCTAssertEqual(viewModel.previousResult, "56+2")
+    }
+
+    func testEnteredSecondOperandCanToggleNegativeAndBackToPositive() {
+        tapNumber("56")
+        tap(.plus)
+        tapNumber("2")
+        tap(.plusMinus)
+        XCTAssertEqual(viewModel.currentExpression, "56+(-2)")
+
+        tap(.plusMinus)
+        XCTAssertEqual(viewModel.currentExpression, "56+2")
+
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "58")
+        XCTAssertEqual(viewModel.previousResult, "56+2")
+    }
+
+    func testNativeStyleNegativeOperandsKeepSequentialChainSemantics() {
+        tap(.plusMinus)
+        tapNumber("150")
+        tap(.substract)
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("2")
+        tap(.plus)
+        tap(.plusMinus)
+        tapNumber("2")
+
+        XCTAssertEqual(viewModel.currentExpression, "(-150)−2+2+(-2)")
+
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "-152")
+        XCTAssertEqual(viewModel.previousResult, "(-150)−2+2+(-2)")
+    }
+
+    func testNegativeDecimalSecondOperandUsesParentheses() {
+        tapNumber("5")
+        tap(.plus)
+        tap(.plusMinus)
+        tap(.decimal)
+        XCTAssertEqual(viewModel.currentExpression, "5+(-0.)")
+
+        tapNumber("25")
+        XCTAssertEqual(viewModel.currentExpression, "5+(-0.25)")
+
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "4.75")
+        XCTAssertEqual(viewModel.previousResult, "5+(-0.25)")
+    }
+
+    func testRevertCancelsPendingNegativeOperandWithoutCorruptingExpression() {
+        tapNumber("56")
+        tap(.plus)
+        tap(.plusMinus)
+        tap(.revert)
+
+        XCTAssertEqual(viewModel.result, "0")
+        XCTAssertEqual(viewModel.currentExpression, "56+")
+
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "59")
+        XCTAssertEqual(viewModel.previousResult, "56+3")
     }
     
     func testInitialMinusStartsSubtractionFromZero() {
@@ -428,6 +698,69 @@ class CalculatorTests: XCTestCase {
     }
     
     // MARK: - 表达式显示测试
+    func testNewDigitAfterNegativeResultClearsCompletedExpression() {
+        tapNumber("89")
+        tap(.multiply)
+        tapNumber("2")
+        tap(.plusMinus)
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "-178")
+        XCTAssertEqual(viewModel.previousResult, "89×(-2)")
+
+        assertNewDigitStartsCleanCalculation()
+    }
+
+    func testNewDigitAfterPositiveResultClearsCompletedExpression() {
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("3")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "5")
+        XCTAssertEqual(viewModel.previousResult, "2+3")
+
+        assertNewDigitStartsCleanCalculation()
+    }
+
+    func testNewDigitAfterPercentageClearsCompletedExpression() {
+        tapNumber("50")
+        tap(.percentage)
+
+        XCTAssertEqual(viewModel.result, "0.5")
+        XCTAssertEqual(viewModel.previousResult, "50%")
+
+        assertNewDigitStartsCleanCalculation()
+    }
+
+    func testNewDigitAfterUndefinedClearsEarlierCompletedExpression() {
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("3")
+        tap(.equal)
+        tapNumber("1")
+        tap(.divide)
+        tapNumber("0")
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "未定义")
+
+        assertNewDigitStartsCleanCalculation()
+    }
+
+    func testNewDigitAfterRepeatedEqualClearsCompletedExpression() {
+        tapNumber("2")
+        tap(.plus)
+        tapNumber("3")
+        tap(.equal)
+        tap(.equal)
+
+        XCTAssertEqual(viewModel.result, "8")
+        XCTAssertEqual(viewModel.previousResult, "5+3")
+
+        assertNewDigitStartsCleanCalculation()
+    }
+
     func testExpressionDisplay() {
         // 测试表达式显示
         tapNumber("8")
@@ -756,7 +1089,7 @@ class CalculatorTests: XCTestCase {
         tap(.plusMinus)
         tapNumber("12345678901")
         XCTAssertEqual(viewModel.result, "-1234567890")
-        XCTAssertEqual(viewModel.currentExpression, "1+-1234567890")
+        XCTAssertEqual(viewModel.currentExpression, "1+(-1234567890)")
 
         viewModel = makeViewModel()
         tapNumber("1")
@@ -781,7 +1114,7 @@ class CalculatorTests: XCTestCase {
         tapNumber("12")
         tap(.revert)
         XCTAssertEqual(viewModel.result, "-1")
-        XCTAssertEqual(viewModel.currentExpression, "5+-1")
+        XCTAssertEqual(viewModel.currentExpression, "5+(-1)")
 
         tap(.revert)
         XCTAssertEqual(viewModel.result, "0")
@@ -918,9 +1251,68 @@ class CalculatorTests: XCTestCase {
         tap(.revert)
         print("✓ 123 → 退格 = \(viewModel.result)")
         XCTAssertEqual(viewModel.result, "12")
-        
+
         viewModel.reset()
-        
+
         print("\n========== 测试完成 ==========\n")
+    }
+
+    // MARK: - RevertHandler 边界测试:右操作数被完整退格后,后续运算符必须替换,不能产生异常算式
+
+    func testRevertThenOperatorDoesNotProduceDoubleOperatorExpression() {
+        // 5 + 0 → 退格 → display="0", expression="5+", pendingOp=plus
+        // 如果不修复,继续按 "+" 会先计算 5+0=5,再把 "+" 追加到 "5+" 末尾,得到 "5++"。
+        tapNumber("5")
+        tap(.plus)
+        tap(.zero)
+        tap(.revert)
+
+        XCTAssertEqual(viewModel.result, "0")
+        XCTAssertEqual(viewModel.currentExpression, "5+")
+
+        tap(.plus)
+        XCTAssertEqual(viewModel.currentExpression, "5+")
+
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "8")
+        XCTAssertEqual(viewModel.previousResult, "5+3")
+    }
+
+    func testRevertNegativeThenOperatorDoesNotProduceDoubleOperatorExpression() {
+        // 5 + -2 → 退格(-2 → 0)→ "+" → 5 + 3 = 8
+        tapNumber("5")
+        tap(.plus)
+        tap(.plusMinus)
+        tapNumber("2")
+        tap(.revert)
+
+        XCTAssertEqual(viewModel.result, "0")
+        XCTAssertEqual(viewModel.currentExpression, "5+")
+
+        tap(.substract)
+        XCTAssertEqual(viewModel.currentExpression, "5−")
+
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "2")
+        XCTAssertEqual(viewModel.previousResult, "5−3")
+    }
+
+    func testRevertThenReplaceWithDifferentOperator() {
+        // 5 × 0 → 退格 → "+" → 应替换待执行运算符为 "+",而不是计算 5×0 后再追加
+        tapNumber("5")
+        tap(.multiply)
+        tap(.zero)
+        tap(.revert)
+
+        XCTAssertEqual(viewModel.currentExpression, "5×")
+
+        tap(.plus)
+        XCTAssertEqual(viewModel.currentExpression, "5+")
+        tapNumber("3")
+        tap(.equal)
+        XCTAssertEqual(viewModel.result, "8")
+        XCTAssertEqual(viewModel.previousResult, "5+3")
     }
 }
