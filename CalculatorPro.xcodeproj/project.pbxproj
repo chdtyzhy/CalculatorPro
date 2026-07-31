@@ -17,19 +17,32 @@
 		AA0001080000000000000001 /* DialPad.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002080000000000000001 /* DialPad.swift */; };
 		AA0001090000000000000001 /* Operation.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002090000000000000001 /* Operation.swift */; };
 		AA00010A0000000000000001 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020A0000000000000001 /* Colors.swift */; };
-		AA00010B0000000000000001 /* FontManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020B0000000000000001 /* FontManager.swift */; };
 		AA00010C0000000000000001 /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020C0000000000000001 /* FoundationExtensions.swift */; };
 		AA00010D0000000000000001 /* CalculatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA00020D0000000000000001 /* CalculatorState.swift */; };
 		AA00010E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */; };
-		AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */; };
 		AA0001100000000000000001 /* ButtonHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002100000000000000001 /* ButtonHandlers.swift */; };
 		AA0001110000000000000001 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA0003010000000000000001 /* Assets.xcassets */; };
 		AA0001120000000000000001 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AA0002110000000000000001 /* PrivacyInfo.xcprivacy */; };
+		AA0001140000000000000001 /* AppUpdateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002130000000000000001 /* AppUpdateManager.swift */; };
+		AA0001150000000000000001 /* AppReviewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0002140000000000000001 /* AppReviewManager.swift */; };
+		AA3001010000000000000001 /* FinancialAssumptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3002010000000000000001 /* FinancialAssumptions.swift */; };
+		AA3001020000000000000001 /* FinancialPlanningEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3002020000000000000001 /* FinancialPlanningEngine.swift */; };
+		AA3001030000000000000001 /* FinancialPlanningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3002030000000000000001 /* FinancialPlanningViewModel.swift */; };
+		AA3001040000000000000001 /* FinancialPlanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3002040000000000000001 /* FinancialPlanningView.swift */; };
 		AA1001010000000000000001 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1002010000000000000001 /* CalculatorTests.swift */; };
+		AA1001020000000000000001 /* FinancialPlanningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1002020000000000000001 /* FinancialPlanningTests.swift */; };
+		AA2001010000000000000001 /* CalculatorProUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2002010000000000000001 /* CalculatorProUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
 		AA1000100000000000000001 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = AA0000600000000000000001 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = AA0000500000000000000001;
+			remoteInfo = CalculatorPro;
+		};
+		AA2000100000000000000001 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = AA0000600000000000000001 /* Project object */;
 			proxyType = 1;
@@ -50,16 +63,23 @@
 		AA0002080000000000000001 /* DialPad.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DialPad.swift; sourceTree = "<group>"; };
 		AA0002090000000000000001 /* Operation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Operation.swift; sourceTree = "<group>"; };
 		AA00020A0000000000000001 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
-		AA00020B0000000000000001 /* FontManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FontManager.swift; sourceTree = "<group>"; };
 		AA00020C0000000000000001 /* FoundationExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FoundationExtensions.swift; sourceTree = "<group>"; };
 		AA00020D0000000000000001 /* CalculatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorState.swift; sourceTree = "<group>"; };
 		AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Fonts/EurostileExtendedBlack.ttf; sourceTree = "<group>"; };
-		AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Fonts/Bungee/BungeeLayers-Regular.otf"; sourceTree = "<group>"; };
 		AA0002100000000000000001 /* ButtonHandlers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonHandlers.swift; sourceTree = "<group>"; };
 		AA0002110000000000000001 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		AA0002130000000000000001 /* AppUpdateManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUpdateManager.swift; sourceTree = "<group>"; };
+		AA0002140000000000000001 /* AppReviewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppReviewManager.swift; sourceTree = "<group>"; };
+		AA3002010000000000000001 /* FinancialAssumptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialAssumptions.swift; sourceTree = "<group>"; };
+		AA3002020000000000000001 /* FinancialPlanningEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialPlanningEngine.swift; sourceTree = "<group>"; };
+		AA3002030000000000000001 /* FinancialPlanningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialPlanningViewModel.swift; sourceTree = "<group>"; };
+		AA3002040000000000000001 /* FinancialPlanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialPlanningView.swift; sourceTree = "<group>"; };
 		AA0003010000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA1000000000000000000001 /* CalculatorProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalculatorProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA1002010000000000000001 /* CalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTests.swift; sourceTree = "<group>"; };
+		AA1002020000000000000001 /* FinancialPlanningTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialPlanningTests.swift; sourceTree = "<group>"; };
+		AA2000000000000000000001 /* CalculatorProUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalculatorProUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		AA2002010000000000000001 /* CalculatorProUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorProUITests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +97,13 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		AA2000200000000000000001 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -85,6 +112,7 @@
 			children = (
 				AA0000400000000000000001 /* CalculatorPro */,
 				AA1000400000000000000001 /* CalculatorProTests */,
+				AA2000400000000000000001 /* CalculatorProUITests */,
 				AA0000310000000000000001 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -94,6 +122,7 @@
 			children = (
 				AA0000000000000000000001 /* CalculatorPro.app */,
 				AA1000000000000000000001 /* CalculatorProTests.xctest */,
+				AA2000000000000000000001 /* CalculatorProUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -113,6 +142,7 @@
 			isa = PBXGroup;
 			children = (
 				AA0004050000000000000001 /* Main */,
+				AA3004050000000000000001 /* FinancialPlanning */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -132,7 +162,6 @@
 			children = (
 				AA0002110000000000000001 /* PrivacyInfo.xcprivacy */,
 				AA00020E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf */,
-				AA00020F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -151,7 +180,6 @@
 			isa = PBXGroup;
 			children = (
 				AA00020A0000000000000001 /* Colors.swift */,
-				AA00020B0000000000000001 /* FontManager.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -168,6 +196,8 @@
 			isa = PBXGroup;
 			children = (
 				AA0002010000000000000001 /* CalculatorProApp.swift */,
+				AA0002130000000000000001 /* AppUpdateManager.swift */,
+				AA0002140000000000000001 /* AppReviewManager.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -219,12 +249,56 @@
 			path = "Support Shapes";
 			sourceTree = "<group>";
 		};
+		AA3004050000000000000001 /* FinancialPlanning */ = {
+			isa = PBXGroup;
+			children = (
+				AA3004090000000000000001 /* Models */,
+				AA30040A0000000000000001 /* ViewModels */,
+				AA30040B0000000000000001 /* Views */,
+			);
+			path = FinancialPlanning;
+			sourceTree = "<group>";
+		};
+		AA3004090000000000000001 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				AA3002010000000000000001 /* FinancialAssumptions.swift */,
+				AA3002020000000000000001 /* FinancialPlanningEngine.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		AA30040A0000000000000001 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				AA3002030000000000000001 /* FinancialPlanningViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		AA30040B0000000000000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA3002040000000000000001 /* FinancialPlanningView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
 		AA1000400000000000000001 /* CalculatorProTests */ = {
 			isa = PBXGroup;
 			children = (
 				AA1002010000000000000001 /* CalculatorTests.swift */,
+				AA1002020000000000000001 /* FinancialPlanningTests.swift */,
 			);
 			path = CalculatorProTests;
+			sourceTree = "<group>";
+		};
+		AA2000400000000000000001 /* CalculatorProUITests */ = {
+			isa = PBXGroup;
+			children = (
+				AA2002010000000000000001 /* CalculatorProUITests.swift */,
+			);
+			path = CalculatorProUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -254,7 +328,7 @@
 			buildConfigurationList = AA1000510000000000000001 /* Build configuration list for PBXNativeTarget "CalculatorProTests" */;
 			buildPhases = (
 				AA1000520000000000000001 /* Sources */,
-				AA1000200000000000000001 /* Frameworks */,
+				AA1000200000000000001 /* Frameworks */,
 				AA1000530000000000000001 /* Resources */,
 			);
 			buildRules = (
@@ -268,6 +342,26 @@
 			productName = CalculatorProTests;
 			productReference = AA1000000000000000000001 /* CalculatorProTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		AA2000500000000000000001 /* CalculatorProUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = AA2000510000000000000001 /* Build configuration list for PBXNativeTarget "CalculatorProUITests" */;
+			buildPhases = (
+				AA2000520000000000000001 /* Sources */,
+				AA2000200000000000000001 /* Frameworks */,
+				AA2000530000000000000001 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				AA2000120000000000000001 /* PBXTargetDependency */,
+			);
+			name = CalculatorProUITests;
+			packageProductDependencies = (
+			);
+			productName = CalculatorProUITests;
+			productReference = AA2000000000000000000001 /* CalculatorProUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
 
@@ -286,14 +380,18 @@
 						CreatedOnToolsVersion = 26.6;
 						TestTargetID = AA0000500000000000000001;
 					};
+					AA2000500000000000000001 = {
+						CreatedOnToolsVersion = 26.6;
+						TestTargetID = AA0000500000000000000001;
+					};
 				};
 			};
 			buildConfigurationList = AA0000610000000000000001 /* Build configuration list for PBXProject "CalculatorPro" */;
 			compatibilityVersion = "Xcode 16.0.Superseded.1";
-			developmentRegion = en;
+			developmentRegion = "zh-Hans";
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				en,
+				"zh-Hans",
 				Base,
 			);
 			mainGroup = AA0000300000000000000001;
@@ -304,6 +402,7 @@
 			targets = (
 				AA0000500000000000000001 /* CalculatorPro */,
 				AA1000500000000000000001 /* CalculatorProTests */,
+				AA2000500000000000000001 /* CalculatorProUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -315,12 +414,18 @@
 			files = (
 				AA0001120000000000000001 /* PrivacyInfo.xcprivacy in Resources */,
 				AA00010E0000000000000001 /* Fonts/EurostileExtendedBlack.ttf in Resources */,
-				AA00010F0000000000000001 /* Fonts/Bungee/BungeeLayers-Regular.otf in Resources */,
 				AA0001110000000000000001 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		AA1000530000000000000001 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA2000530000000000000001 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -335,6 +440,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA0001010000000000000001 /* CalculatorProApp.swift in Sources */,
+				AA0001140000000000000001 /* AppUpdateManager.swift in Sources */,
+				AA0001150000000000000001 /* AppReviewManager.swift in Sources */,
+				AA3001010000000000000001 /* FinancialAssumptions.swift in Sources */,
+				AA3001020000000000000001 /* FinancialPlanningEngine.swift in Sources */,
+				AA3001030000000000000001 /* FinancialPlanningViewModel.swift in Sources */,
+				AA3001040000000000000001 /* FinancialPlanningView.swift in Sources */,
 				AA0001020000000000000001 /* MainView.swift in Sources */,
 				AA0001030000000000000001 /* CalculatorButtons.swift in Sources */,
 				AA0001040000000000000001 /* DisplayView.swift in Sources */,
@@ -346,7 +457,6 @@
 				AA0001090000000000000001 /* Operation.swift in Sources */,
 				AA00010D0000000000000001 /* CalculatorState.swift in Sources */,
 				AA00010A0000000000000001 /* Colors.swift in Sources */,
-				AA00010B0000000000000001 /* FontManager.swift in Sources */,
 				AA00010C0000000000000001 /* FoundationExtensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -356,6 +466,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA1001010000000000000001 /* CalculatorTests.swift in Sources */,
+				AA1001020000000000000001 /* FinancialPlanningTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		AA2000520000000000000001 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				AA2001010000000000000001 /* CalculatorProUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,6 +485,11 @@
 			isa = PBXTargetDependency;
 			target = AA0000500000000000000001 /* CalculatorPro */;
 			targetProxy = AA1000100000000000000001 /* PBXContainerItemProxy */;
+		};
+		AA2000120000000000000001 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = AA0000500000000000000001 /* CalculatorPro */;
+			targetProxy = AA2000100000000000000001 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -499,7 +623,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7292101;
+				CURRENT_PROJECT_VERSION = 7292102;
 				DEVELOPMENT_TEAM = 5G746VG79C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -531,7 +655,7 @@
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 7292101;
+				CURRENT_PROJECT_VERSION = 7292102;
 				DEVELOPMENT_TEAM = 5G746VG79C;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = NO;
@@ -597,6 +721,48 @@
 			};
 			name = Release;
 		};
+		AA2000800000000000000001 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.proUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CalculatorPro;
+			};
+			name = Debug;
+		};
+		AA2000810000000000000001 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.chdtyzhy.calculatorPro.proUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				TEST_TARGET_NAME = CalculatorPro;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -623,6 +789,15 @@
 			buildConfigurations = (
 				AA1000800000000000000001 /* Debug */,
 				AA1000810000000000000001 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		AA2000510000000000000001 /* Build configuration list for PBXNativeTarget "CalculatorProUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				AA2000800000000000000001 /* Debug */,
+				AA2000810000000000000001 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
