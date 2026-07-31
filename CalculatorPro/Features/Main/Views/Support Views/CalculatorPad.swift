@@ -2,6 +2,7 @@ import SwiftUI
 
 // 单个计算器按钮
 struct CalculatorPad: View {
+    @Environment(\.calculatorTheme) private var theme
     @EnvironmentObject var appModel: MainViewModel
     var dialPad: DialPad
     
@@ -9,13 +10,13 @@ struct CalculatorPad: View {
     private var buttonBackgroundColor: Color {
         switch dialPad {
         case .clear, .plusMinus, .percentage, .revert:
-            return .functionKey
+            return theme.functionKey
         case .divide, .multiply, .substract, .plus:
-            return .operationKey
+            return theme.operationKey
         case .equal:
-            return .equalKey
+            return theme.equalKey
         default:
-            return .numberKey
+            return theme.numberKey
         }
     }
     
@@ -23,11 +24,11 @@ struct CalculatorPad: View {
     private var buttonForegroundColor: Color {
         switch dialPad {
         case .clear, .plusMinus, .percentage, .revert:
-            return .primaryInk
+            return theme.primaryInk
         case .divide, .multiply, .substract, .plus, .equal:
             return Color.white
         default:
-            return .primaryInk
+            return theme.primaryInk
         }
     }
     
@@ -54,10 +55,10 @@ struct CalculatorPad: View {
             appModel.performAction(for: dialPad)
         } label: {
             Text(displayText)
-                .font(.system(size: 30, weight: .semibold, design: .rounded))
+                .font(.system(size: 28, weight: .semibold, design: .rounded))
                 .foregroundColor(buttonForegroundColor)
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .contentShape(RoundedRectangle(cornerRadius: 16, style: .continuous))
+                .contentShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
         }
         .buttonStyle(.plain)
         .calculatorKeySurface(color: buttonBackgroundColor)
@@ -71,13 +72,13 @@ private extension View {
         if #available(iOS 26.0, *) {
             glassEffect(
                 .regular.tint(color).interactive(),
-                in: RoundedRectangle(cornerRadius: 16, style: .continuous)
+                in: RoundedRectangle(cornerRadius: 14, style: .continuous)
             )
         } else {
             background(
-                RoundedRectangle(cornerRadius: 16, style: .continuous)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
                     .fill(color)
-                    .shadow(color: .black.opacity(0.08), radius: 6, y: 3)
+                    .shadow(color: .black.opacity(0.06), radius: 2, y: 1)
             )
         }
     }
