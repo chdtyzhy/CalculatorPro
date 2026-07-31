@@ -29,6 +29,7 @@
 		AA3001020000000000000001 /* FinancialPlanningEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3002020000000000000001 /* FinancialPlanningEngine.swift */; };
 		AA3001030000000000000001 /* FinancialPlanningViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3002030000000000000001 /* FinancialPlanningViewModel.swift */; };
 		AA3001040000000000000001 /* FinancialPlanningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA3002040000000000000001 /* FinancialPlanningView.swift */; };
+		AA4001010000000000000001 /* ToolsMenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA4002010000000000000001 /* ToolsMenuView.swift */; };
 		AA1001010000000000000001 /* CalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1002010000000000000001 /* CalculatorTests.swift */; };
 		AA1001020000000000000001 /* FinancialPlanningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1002020000000000000001 /* FinancialPlanningTests.swift */; };
 		AA2001010000000000000001 /* CalculatorProUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA2002010000000000000001 /* CalculatorProUITests.swift */; };
@@ -74,6 +75,7 @@
 		AA3002020000000000000001 /* FinancialPlanningEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialPlanningEngine.swift; sourceTree = "<group>"; };
 		AA3002030000000000000001 /* FinancialPlanningViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialPlanningViewModel.swift; sourceTree = "<group>"; };
 		AA3002040000000000000001 /* FinancialPlanningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FinancialPlanningView.swift; sourceTree = "<group>"; };
+		AA4002010000000000000001 /* ToolsMenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToolsMenuView.swift; sourceTree = "<group>"; };
 		AA0003010000000000000001 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA1000000000000000000001 /* CalculatorProTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CalculatorProTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		AA1002010000000000000001 /* CalculatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalculatorTests.swift; sourceTree = "<group>"; };
@@ -143,6 +145,7 @@
 			children = (
 				AA0004050000000000000001 /* Main */,
 				AA3004050000000000000001 /* FinancialPlanning */,
+				AA4004050000000000000001 /* Tools */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -280,6 +283,22 @@
 			isa = PBXGroup;
 			children = (
 				AA3002040000000000000001 /* FinancialPlanningView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		AA4004050000000000000001 /* Tools */ = {
+			isa = PBXGroup;
+			children = (
+				AA40040B0000000000000001 /* Views */,
+			);
+			path = Tools;
+			sourceTree = "<group>";
+		};
+		AA40040B0000000000000001 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				AA4002010000000000000001 /* ToolsMenuView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -446,6 +465,7 @@
 				AA3001020000000000000001 /* FinancialPlanningEngine.swift in Sources */,
 				AA3001030000000000000001 /* FinancialPlanningViewModel.swift in Sources */,
 				AA3001040000000000000001 /* FinancialPlanningView.swift in Sources */,
+				AA4001010000000000000001 /* ToolsMenuView.swift in Sources */,
 				AA0001020000000000000001 /* MainView.swift in Sources */,
 				AA0001030000000000000001 /* CalculatorButtons.swift in Sources */,
 				AA0001040000000000000001 /* DisplayView.swift in Sources */,

@@ -47,7 +47,7 @@ final class CalculatorProUITests: XCTestCase {
         }
 
         // 工具栏按钮
-        XCTAssertTrue(app.buttons["财务测算"].exists, "缺少「财务测算」按钮")
+        XCTAssertTrue(app.buttons["工具"].exists, "缺少「工具」按钮")
         XCTAssertTrue(app.buttons["关于与隐私"].exists, "缺少「关于与隐私」按钮")
         XCTAssertTrue(app.buttons["计算历史"].exists, "缺少「计算历史」按钮")
 
@@ -58,9 +58,14 @@ final class CalculatorProUITests: XCTestCase {
 
     func testFinancialPlanningEntryShowsBothModes() throws {
         let app = launchApp()
-        let entry = app.buttons["financial-planning-entry"]
-        XCTAssertTrue(entry.waitForExistence(timeout: 3), "应显示财务测算入口")
+        let entry = app.buttons["tools-menu-entry"]
+        XCTAssertTrue(entry.waitForExistence(timeout: 3), "应显示工具菜单入口")
         entry.tap()
+
+        XCTAssertTrue(app.navigationBars["工具"].waitForExistence(timeout: 3))
+        let financialTool = app.buttons["财务自由计算器"]
+        XCTAssertTrue(financialTool.waitForExistence(timeout: 2), "应显示财务自由计算器入口")
+        financialTool.tap()
 
         XCTAssertTrue(app.navigationBars["财务测算"].waitForExistence(timeout: 3))
         XCTAssertTrue(

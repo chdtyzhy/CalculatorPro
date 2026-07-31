@@ -11,7 +11,7 @@ struct MainView: View {
     @State private var isShowingHistory = false
     @State private var isShowingAbout = false
     @State private var isShowingThemes = false
-    @State private var isShowingFinancialPlanning = false
+    @State private var isShowingToolsMenu = false
     @State private var customBackgroundImage = CustomBackgroundStore.load()
     
     let duration: TimeInterval = 0.3
@@ -55,8 +55,8 @@ struct MainView: View {
                         Spacer()
 
                         HStack(spacing: 0) {
-                            Button(action: { isShowingFinancialPlanning = true }) {
-                                Image(systemName: "chart.line.uptrend.xyaxis")
+                            Button(action: { isShowingToolsMenu = true }) {
+                                Image(systemName: "square.grid.2x2")
                                     .font(.system(size: 14, weight: .semibold))
                                     .foregroundColor(activeTheme.primaryInk)
                                     .frame(width: 28, height: 28)
@@ -65,8 +65,8 @@ struct MainView: View {
                             .buttonStyle(.plain)
                             .frame(width: 44, height: 44)
                             .contentShape(Rectangle())
-                            .accessibilityLabel("财务测算")
-                            .accessibilityIdentifier("financial-planning-entry")
+                            .accessibilityLabel("工具")
+                            .accessibilityIdentifier("tools-menu-entry")
 
                             Button(action: { isShowingAbout = true }) {
                                 Image(systemName: "info.circle")
@@ -129,8 +129,8 @@ struct MainView: View {
         .sheet(isPresented: $isShowingAbout) {
             AboutView(isPresented: $isShowingAbout)
         }
-        .sheet(isPresented: $isShowingFinancialPlanning) {
-            FinancialPlanningView()
+        .sheet(isPresented: $isShowingToolsMenu) {
+            ToolsMenuView()
         }
         .fullScreenCover(isPresented: $isShowingThemes) {
             ThemePickerView(
@@ -825,7 +825,7 @@ private struct LegacyGlassButtonStyle: ButtonStyle {
     }
 }
 
-private extension View {
+extension View {
     @ViewBuilder
     func adaptiveGlassButtonStyle(tint: Color) -> some View {
         if #available(iOS 26.0, *) {
