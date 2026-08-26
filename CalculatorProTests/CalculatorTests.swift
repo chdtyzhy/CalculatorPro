@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 import XCTest
 @testable import CalculatorPro
 
@@ -1314,5 +1315,105 @@ class CalculatorTests: XCTestCase {
         tap(.equal)
         XCTAssertEqual(viewModel.result, "8")
         XCTAssertEqual(viewModel.previousResult, "5+3")
+    }
+
+    // MARK: - 【临时】超限输入复现（定位后删除）
+
+    func testReproMaxDigitsBlankDisplay() {
+        for i in 1...25 {
+            tap(.eight)
+            NSLog(
+                "[REPRO-MAXDIGITS] tap %d -> result=%@ expr=%@ primary=%@",
+                i, viewModel.result, viewModel.currentExpression, viewModel.primaryDisplayText
+            )
+        }
+        NSLog("[REPRO-MAXDIGITS] final result=%@ expr=%@", viewModel.result, viewModel.currentExpression)
+    }
+
+    func testReproMaxDigitsBlankDisplaySnapshot() {
+        for _ in 1...25 { tap(.eight) }
+
+        let view = MainView(appModel: self.viewModel)
+            .frame(width: 402, height: 874)
+
+        let controller = UIHostingController(rootView: view)
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        controller.view.layoutIfNeeded()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
+        controller.view.layoutIfNeeded()
+
+        let renderer = UIGraphicsImageRenderer(bounds: controller.view.bounds)
+        let image = renderer.image { _ in
+            controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+        }
+        if let data = image.pngData() {
+            try? data.write(to: URL(fileURLWithPath: "/tmp/repro-maxdigits.png"))
+        }
+        NSLog("[REPRO-MAXDIGITS] snapshot saved, resultText=%@", viewModel.primaryDisplayText)
+    }
+
+    // 【临时】字体渲染变体诊断（定位后删除）
+    func testReproFontVariantMatrix() {
+        let s10 = "8888888888"
+        let matrix = VStack(alignment: .trailing, spacing: 18) {
+            ForEach(0..<10, id: \.self) { idx in
+                switch idx {
+                case 0:
+                    Text(s10).font(.system(size: 54, weight: .medium, design: .rounded))
+                        .minimumScaleFactor(0.35).lineLimit(1).allowsTightening(true)
+                case 1:
+                    Text(s10).font(.system(size: 54, weight: .medium))
+                        .minimumScaleFactor(0.35).lineLimit(1).allowsTightening(true)
+                case 2:
+                    Text(s10).font(.system(size: 54, weight: .light, design: .rounded))
+                        .minimumScaleFactor(0.35).lineLimit(1).allowsTightening(true)
+                case 3:
+                    Text(s10).font(.system(size: 54, weight: .medium, design: .rounded))
+                        .lineLimit(1)
+                case 4:
+                    Text(s10).font(.system(size: 40, weight: .medium, design: .rounded))
+                        .minimumScaleFactor(0.35).lineLimit(1).allowsTightening(true)
+                case 5:
+                    Text("888888888").font(.system(size: 54, weight: .medium, design: .rounded))
+                        .minimumScaleFactor(0.35).lineLimit(1).allowsTightening(true)
+                case 6:
+                    Text("1234567890").font(.system(size: 54, weight: .medium, design: .rounded))
+                        .minimumScaleFactor(0.35).lineLimit(1).allowsTightening(true)
+                case 7:
+                    Text(s10).font(.system(size: 70, weight: .light))
+                        .minimumScaleFactor(0.5).lineLimit(1)
+                case 8:
+                    Text(s10).font(.system(size: 54, weight: .medium, design: .rounded))
+                        .minimumScaleFactor(0.35).lineLimit(1)
+                default:
+                    Text(" ").font(.system(size: 20, weight: .regular, design: .rounded))
+                        .lineLimit(1).minimumScaleFactor(0.6)
+                }
+            }
+        }
+        .frame(width: 370)
+        .padding(16)
+        .background(Color.black)
+
+        let controller = UIHostingController(
+            rootView: matrix.frame(width: 402, height: 874)
+        )
+        let window = UIWindow(frame: CGRect(x: 0, y: 0, width: 402, height: 874))
+        window.rootViewController = controller
+        window.makeKeyAndVisible()
+        controller.view.layoutIfNeeded()
+        RunLoop.current.run(until: Date(timeIntervalSinceNow: 0.5))
+        controller.view.layoutIfNeeded()
+
+        let renderer = UIGraphicsImageRenderer(bounds: controller.view.bounds)
+        let image = renderer.image { _ in
+            controller.view.drawHierarchy(in: controller.view.bounds, afterScreenUpdates: true)
+        }
+        if let data = image.pngData() {
+            try? data.write(to: URL(fileURLWithPath: "/tmp/repro-variants.png"))
+        }
+        NSLog("[REPRO-MAXDIGITS] variant matrix saved")
     }
 }
